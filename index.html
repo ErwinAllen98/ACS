@@ -234,6 +234,7 @@
                 <button class="tab-button" data-tab="ecg"><i class="fas fa-heart-pulse"></i> ECG</button>
             </nav>
 
+            <!-- All Tab Content remains the same -->
             <div id="history" class="tab-content active">
                 <div class="finding-grid">
                     <div class="finding-item" data-lr-pos="2.0" data-lr-neg="0.75" data-state="neutral" data-tooltip="General finding of known CAD. GUIDELINE: If a more specific history is available (e.g., prior MI), select that specific finding instead to improve accuracy."><div class="finding-header"><span class="finding-text">Prior history of CAD</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
@@ -339,11 +340,13 @@
 
     function calculatePostTestProbability() {
         let compositeLR = 1.0;
-        // This loop will now only ever find one active item, if any.
-        document.querySelectorAll('.finding-item').forEach(item => {
+        document.querySelectorAll('.finding-item.present, .finding-item.absent').forEach(item => {
             const state = item.dataset.state;
-            if (state === 'present') compositeLR *= parseFloat(item.dataset.lrPos);
-            else if (state === 'absent') compositeLR *= parseFloat(item.dataset.lrNeg);
+            if (state === 'present') {
+                compositeLR *= parseFloat(item.dataset.lrPos);
+            } else if (state === 'absent') {
+                compositeLR *= parseFloat(item.dataset.lrNeg);
+            }
         });
         
         const preTestOdds = probabilityToOdds(preTestProbability);
@@ -380,43 +383,53 @@
     }
 
     function updateActiveFindings() {
-        const activeFinding = document.querySelector('.finding-item.present, .finding-item.absent');
+        const activeFindings = document.querySelectorAll('.finding-item.present, .finding-item.absent');
         
-        if (!activeFinding) {
-            activeFindingsContainer.innerHTML = `<h4>Active Finding</h4><p style="color: var(--subtle-text);">Select one finding to see a summary here.</p>`;
+        if (activeFindings.length === 0) {
+            activeFindingsContainer.innerHTML = `<h4>Active Findings</h4><p style="color: var(--subtle-text);">Select findings to see a summary here.</p>`;
             return;
         }
 
-        const text = activeFinding.querySelector('.finding-text').textContent;
-        const isPresent = activeFinding.classList.contains('present');
-        const findingClass = isPresent ? 'present-finding' : 'absent-finding';
-        const iconClass = isPresent ? 'fa-arrow-up' : 'fa-arrow-down';
-        
-        let html = `<h4>Active Finding</h4><ul><li class="${findingClass}"><i class="fas ${iconClass}"></i> ${text}</li></ul>`;
+        let html = '<h4>Active Findings</h4><ul>';
+        activeFindings.forEach(item => {
+            const text = item.querySelector('.finding-text').textContent;
+            const isPresent = item.classList.contains('present');
+            const findingClass = isPresent ? 'present-finding' : 'absent-finding';
+            const iconClass = isPresent ? 'fa-arrow-up' : 'fa-arrow-down';
+            html += `<li class="${findingClass}"><i class="fas ${iconClass}"></i> ${text}</li>`;
+        });
+        html += '</ul>';
         activeFindingsContainer.innerHTML = html;
     }
 
     function handleFindingClick(event) {
         const button = event.target.closest('.btn-present, .btn-absent');
         if (!button) return;
-        
+
         const clickedItem = button.closest('.finding-item');
+        const tabContent = clickedItem.closest('.tab-content');
+        
         const currentState = clickedItem.dataset.state;
         const buttonType = button.classList.contains('btn-present') ? 'present' : 'absent';
         
-        // Determine the next state for the clicked item
+        // **CORRECTED LOGIC:** Determine the next state.
+        // If the clicked button is already active, the next state is neutral (toggling off).
+        // Otherwise, the next state is the type of the button clicked.
         const nextState = (currentState === buttonType) ? 'neutral' : buttonType;
 
-        // **NEW LOGIC: Reset all findings first**
-        document.querySelectorAll('.finding-item').forEach(item => {
-            item.dataset.state = 'neutral';
-            item.classList.remove('present', 'absent');
+        // Reset all other findings within the SAME tab.
+        tabContent.querySelectorAll('.finding-item').forEach(item => {
+            if (item !== clickedItem) {
+                item.dataset.state = 'neutral';
+                item.classList.remove('present', 'absent');
+            }
         });
 
-        // **Apply the new state ONLY to the clicked item**
+        // Apply the new state to the clicked item.
+        clickedItem.dataset.state = nextState;
+        clickedItem.classList.remove('present', 'absent'); // Clear old classes
         if (nextState !== 'neutral') {
-            clickedItem.dataset.state = nextState;
-            clickedItem.classList.add(nextState);
+            clickedItem.classList.add(nextState); // Add new class if not neutral
         }
         
         updateLiveReport();
