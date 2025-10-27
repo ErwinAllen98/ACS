@@ -6,7 +6,6 @@
     <title>Definitive Hybrid ACS Dashboard</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <!-- Replaced Roboto with Inter for superior UI readability -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -32,7 +31,6 @@
         *, *::before, *::after { box-sizing: border-box; }
         html { font-size: 16px; scroll-behavior: smooth; }
         body {
-            /* Using Inter as the primary font */
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; margin: 0;
             transition: background-color 0.3s, color 0.3s;
@@ -69,7 +67,6 @@
         }
         .tab-button.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
         .tab-button:hover { background-color: rgba(128,128,128,0.1); }
-
         .tab-content { display: none; }
         .tab-content.active { display: block; animation: fadeIn 0.5s; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -77,7 +74,7 @@
         .finding-grid {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;
         }
-        .finding-item, .score-item, .timi-checkbox-item { position: relative; }
+        .finding-item { position: relative; }
         .finding-item {
             display: flex; flex-direction: column; padding: 0.75rem 1rem; border-radius: 10px;
             border: 2px solid var(--border-color); background-color: var(--surface-color); transition: all 0.2s ease;
@@ -109,15 +106,6 @@
             transition-delay: 0.5s; pointer-events: none;
         }
         [data-tooltip]:hover::after { visibility: visible; opacity: 1; }
-
-        .score-section { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); }
-        .score-section:last-child { border-bottom: none; }
-        .score-section h3 { font-size: 1.2em; color: var(--secondary-color); margin-bottom: 1rem; }
-        .score-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; padding: 0.25rem 0; }
-        .score-item label { font-weight: 500; }
-        .score-display { text-align: center; font-size: 1.2rem; font-weight: 600; padding: 1rem; background-color: var(--bg-color); border-radius: 8px; margin-top: 1rem; }
-        .score-display span { font-size: 1.5rem; color: var(--primary-color); }
-        .timi-checkbox-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem; }
 
         .pretest-prob-card { background-color: var(--surface-color); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
         .pretest-prob-card label { font-weight: 600; color: var(--secondary-color); display: block; margin-bottom: 0.5rem; }
@@ -161,8 +149,6 @@
         .btn-reset:hover { background-color: #495057; }
         
         .attribution-footer { text-align: center; padding: 1.5rem; font-size: 0.9rem; color: var(--subtle-text); }
-
-        /* Modal Styles */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6); z-index: 100;
@@ -189,7 +175,6 @@
         }
         .modal-content .btn-modal-close:hover { background: var(--secondary-color); }
 
-        /* Dark Mode Toggle */
         .theme-switch-wrapper { display: flex; align-items: center; gap: 0.5rem; }
         .theme-switch { display: inline-block; height: 24px; position: relative; width: 44px; }
         .theme-switch input { display: none; }
@@ -247,18 +232,15 @@
                 <button class="tab-button" data-tab="pain"><i class="fas fa-heart-crack"></i> Pain</button>
                 <button class="tab-button" data-tab="exam"><i class="fas fa-stethoscope"></i> Exam & Symptoms</button>
                 <button class="tab-button" data-tab="ecg"><i class="fas fa-heart-pulse"></i> ECG</button>
-                <button class="tab-button" data-tab="scores"><i class="fas fa-star-half-stroke"></i> Scores</button>
             </nav>
 
-            <!-- All Tab Content is identical to the previous version -->
             <div id="history" class="tab-content active">
                 <div class="finding-grid">
                     <div class="finding-item" data-lr-pos="2.0" data-lr-neg="0.75" data-state="neutral" data-tooltip="General finding of known CAD. GUIDELINE: If a more specific history is available (e.g., prior MI), select that specific finding instead to improve accuracy."><div class="finding-header"><span class="finding-text">Prior history of CAD</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
                     <div class="finding-item" data-lr-pos="1.6" data-lr-neg="0.88" data-state="neutral" data-tooltip="A documented history of a previous myocardial infarction. This is a specific type of CAD."><div class="finding-header"><span class="finding-text">Prior MI</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
                     <div class="finding-item" data-lr-pos="3.1" data-lr-neg="0.92" data-state="neutral" data-tooltip="A prior stress test with ischemic changes. This is strong evidence for underlying CAD."><div class="finding-header"><span class="finding-text">Abnormal prior stress test</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
                     <div class="finding-item" data-lr-pos="2.7" data-lr-neg="0.96" data-state="neutral" data-tooltip="A known diagnosis of Peripheral Arterial Disease."><div class="finding-header"><span class="finding-text">Peripheral Arterial Disease</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
-                    <div class="finding-item" data-lr-pos="1.4" data-lr-neg="0.90" data-state="neutral" data-tooltip="A known diagnosis of diabetes mellitus."><div class="finding-header"><span class="finding-text">Diabetes</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
-                    <div class="finding-item" data-lr-pos="1.4" data-lr-neg="0.97" data-state="neutral" data-tooltip="A documented history of a stroke or TIA."><div class="finding-header"><span class="finding-text">History of CVA/TIA</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
+                    <div class="finding-item" data-lr-pos="1.4" data-lr-neg="0.90" data-state="neutral" data-tooltip="A known diagnosis of diabetes mellitus."><div class="finding-header"><span class="finding-text">Diabetes</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div><div class="finding-item" data-lr-pos="1.4" data-lr-neg="0.97" data-state="neutral" data-tooltip="A documented history of a stroke or TIA."><div class="finding-header"><span class="finding-text">History of CVA/TIA</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
                     <div class="finding-item" data-lr-pos="1.3" data-lr-neg="0.70" data-state="neutral" data-tooltip="Patient is male."><div class="finding-header"><span class="finding-text">Male gender</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
                     <div class="finding-item" data-lr-pos="1.3" data-lr-neg="0.85" data-state="neutral" data-tooltip="A known diagnosis of high cholesterol or triglycerides."><div class="finding-header"><span class="finding-text">Hyperlipidemia</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
                     <div class="finding-item" data-lr-pos="1.2" data-lr-neg="0.78" data-state="neutral" data-tooltip="A known diagnosis of high blood pressure."><div class="finding-header"><span class="finding-text">Hypertension</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
@@ -269,15 +251,13 @@
             </div>
             <div id="pain" class="tab-content">
                 <div class="finding-grid">
-                    <div class="finding-item" data-lr-pos="1.9" data-lr-neg="0.52" data-state="neutral" data-tooltip="Classic ischemic pain (substernal, worse with exertion, relieved by rest/NTG). GUIDELINE: If you select this, do NOT also select its components like 'Pain worse with exertion' or 'Improvement with NTG' to avoid double-counting."><div class="finding-header"><span class="finding-text">"Typical" chest pain</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
-                    <div class="finding-item" data-lr-pos="1.65" data-lr-neg="0.75" data-state="neutral" data-tooltip="Patient reports that their chest pain is triggered or worsened by physical activity. This is one component of 'Typical' pain."><div class="finding-header"><span class="finding-text">Pain worse with exertion</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
+                    <div class="finding-item" data-lr-pos="1.9" data-lr-neg="0.52" data-state="neutral" data-tooltip="Classic ischemic pain (substernal, worse with exertion, relieved by rest/NTG). GUIDELINE: If you select this, do NOT also select its components like 'Pain worse with exertion' or 'Improvement with NTG' to avoid double-counting."><div class="finding-header"><span class="finding-text">"Typical" chest pain</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div><div class="finding-item" data-lr-pos="1.65" data-lr-neg="0.75" data-state="neutral" data-tooltip="Patient reports that their chest pain is triggered or worsened by physical activity. This is one component of 'Typical' pain."><div class="finding-header"><span class="finding-text">Pain worse with exertion</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
                     <div class="finding-item" data-lr-pos="1.1" data-lr-neg="0.90" data-state="neutral" data-tooltip="Pain is relieved after taking nitroglycerin. This is one component of 'Typical' pain."><div class="finding-header"><span class="finding-text">Any improvement with NTG</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
                     <div class="finding-item" data-lr-pos="2.6" data-lr-neg="0.93" data-state="neutral" data-tooltip="Pain radiates to both arms simultaneously. GUIDELINE: This is a strong, specific finding. If selected, do NOT also select radiation to a single arm."><div class="finding-header"><span class="finding-text">Radiation to both arms</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
                     <div class="finding-item" data-lr-pos="1.3" data-lr-neg="0.88" data-state="neutral" data-tooltip="Pain radiates specifically to the left arm."><div class="finding-header"><span class="finding-text">Radiation to left arm</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
                     <div class="finding-item" data-lr-pos="1.3" data-lr-neg="0.99" data-state="neutral" data-tooltip="Pain radiates to the right arm."><div class="finding-header"><span class="finding-text">Radiation to right arm</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
                     <div class="finding-item" data-lr-pos="2.2" data-lr-neg="0.67" data-state="neutral" data-tooltip="Patient's current pain feels identical to a previous episode of known ischemic pain (e.g., prior MI or angina)."><div class="finding-header"><span class="finding-text">Pain similar to prior ischemia</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
-                    <div class="finding-item" data-lr-pos="2.0" data-lr-neg="0.84" data-state="neutral" data-tooltip="Patient reports their chest pain has become more frequent or severe over the last 24 hours."><div class="finding-header"><span class="finding-text">Change in pattern over 24h</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
-                    <div class="finding-item" data-lr-pos="1.5" data-lr-neg="0.91" data-state="neutral" data-tooltip="Patient reports their chest pain radiates up into their neck or jaw area."><div class="finding-header"><span class="finding-text">Radiation to neck or jaw</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
+                    <div class="finding-item" data-lr-pos="2.0" data-lr-neg="0.84" data-state="neutral" data-tooltip="Patient reports their chest pain has become more frequent or severe over the last 24 hours."><div class="finding-header"><span class="finding-text">Change in pattern over 24h</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div><div class="finding-item" data-lr-pos="1.5" data-lr-neg="0.91" data-state="neutral" data-tooltip="Patient reports their chest pain radiates up into their neck or jaw area."><div class="finding-header"><span class="finding-text">Radiation to neck or jaw</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
                     <div class="finding-item" data-lr-pos="1.3" data-lr-neg="0.80" data-state="neutral" data-tooltip="Patient has experienced similar episodes of chest pain in the recent past."><div class="finding-header"><span class="finding-text">Recent episode of similar pain</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
                     <div class="finding-item" data-lr-pos="1.1" data-lr-neg="0.75" data-state="neutral" data-tooltip="The pain began suddenly."><div class="finding-header"><span class="finding-text">Abrupt onset</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
                     <div class="finding-item" data-lr-pos="0.48" data-lr-neg="1.15" data-state="neutral" data-tooltip="Pain that worsens with deep inspiration or coughing. This finding makes ACS less likely."><div class="finding-header"><span class="finding-text">Pleuritic pain (reassuring)</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
@@ -288,8 +268,7 @@
                 <div class="finding-grid">
                     <div class="finding-item" data-lr-pos="3.9" data-lr-neg="0.98" data-state="neutral" data-tooltip="Systolic blood pressure < 100 mmHg at rest."><div class="finding-header"><span class="finding-text">Hypotension (SBP < 100)</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
                     <div class="finding-item" data-lr-pos="2.0" data-lr-neg="0.95" data-state="neutral" data-tooltip="Presence of crackling sounds (rales) heard during lung auscultation, suggesting heart failure."><div class="finding-header"><span class="finding-text">Lung rales</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
-                    <div class="finding-item" data-lr-pos="1.9" data-lr-neg="0.95" data-state="neutral" data-tooltip="Respiratory rate >20 breaths per minute at rest."><div class="finding-header"><span class="finding-text">Tachypnea (RR > 20)</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
-                    <div class="finding-item" data-lr-pos="1.35" data-lr-neg="0.92" data-state="neutral" data-tooltip="Presence of sweating (diaphoresis) accompanying the chest pain."><div class="finding-header"><span class="finding-text">Pain with diaphoresis</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
+                    <div class="finding-item" data-lr-pos="1.9" data-lr-neg="0.95" data-state="neutral" data-tooltip="Respiratory rate >20 breaths per minute at rest."><div class="finding-header"><span class="finding-text">Tachypnea (RR > 20)</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div><div class="finding-item" data-lr-pos="1.35" data-lr-neg="0.92" data-state="neutral" data-tooltip="Presence of sweating (diaphoresis) accompanying the chest pain."><div class="finding-header"><span class="finding-text">Pain with diaphoresis</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
                     <div class="finding-item" data-lr-pos="1.3" data-lr-neg="0.99" data-state="neutral" data-tooltip="Heart rate greater than 120 beats per minute at rest."><div class="finding-header"><span class="finding-text">Tachycardia (HR > 120)</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
                     <div class="finding-item" data-lr-pos="1.2" data-lr-neg="0.89" data-state="neutral" data-tooltip="Presence of shortness of breath occurring with the chest pain."><div class="finding-header"><span class="finding-text">Pain with dyspnea</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
                     <div class="finding-item" data-lr-pos="1.2" data-lr-neg="0.985" data-state="neutral" data-tooltip="Patient describes the pain as a 'burning' sensation."><div class="finding-header"><span class="finding-text">Burning pain</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
@@ -303,28 +282,6 @@
                     <div class="finding-item" data-lr-pos="3.6" data-lr-neg="0.74" data-state="neutral" data-tooltip="A general category for any new ischemic change. GUIDELINE: For better precision, select the specific findings below (e.g., ST Depression) if present, and leave this option neutral."><div class="finding-header"><span class="finding-text">Any Ischemic ECG change</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
                     <div class="finding-item" data-lr-pos="5.3" data-lr-neg="0.79" data-state="neutral" data-tooltip="New ST-segment depression of 0.5mm or more. This is a specific and high-risk finding."><div class="finding-header"><span class="finding-text">ST Depression > 0.5mm</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
                     <div class="finding-item" data-lr-pos="1.8" data-lr-neg="0.89" data-state="neutral" data-tooltip="Presence of newly inverted T-waves on the ECG."><div class="finding-header"><span class="finding-text">New T wave inversion</span></div><div class="finding-controls"><button type="button" class="btn-absent"><i class="fas fa-times"></i> Absent</button><button type="button" class="btn-present"><i class="fas fa-check"></i> Present</button></div></div>
-                </div>
-            </div>
-            <div id="scores" class="tab-content">
-                <div class="score-section">
-                    <h3>HEART Score</h3>
-                    <div class="score-item" data-tooltip="Assesses the nature of the patient's story. 'Highly suspicious' includes classic crushing pain, while 'slightly suspicious' might be atypical features."><label>History</label> <select id="h_hist" class="score-input"><option value="0">Slightly suspicious (0)</option><option value="1">Moderately suspicious (1)</option><option value="2">Highly suspicious (2)</option></select></div>
-                    <div class="score-item" data-tooltip="Evaluates the ECG for ischemic changes. 'Significant ST deviation' is the highest risk finding."><label>ECG</label> <select id="h_ecg" class="score-input"><option value="0">Normal (0)</option><option value="1">Non-specific changes (1)</option><option value="2">Significant ST deviation (2)</option></select></div>
-                    <div class="score-item" data-tooltip="Older age is a significant risk factor for coronary artery disease."><label>Age</label> <select id="h_age" class="score-input"><option value="0">< 45 (0)</option><option value="1">45-64 (1)</option><option value="2">≥ 65 (2)</option></select></div>
-                    <div class="score-item" data-tooltip="Counts the number of atherosclerotic risk factors (DM, smoking, HTN, HLD, family hx, obesity) or known atherosclerotic disease."><label>Risk Factors</label> <select id="h_risk" class="score-input"><option value="0">None (0)</option><option value="1">1-2 factors (1)</option><option value="2">≥ 3 factors / CAD (2)</option></select></div>
-                    <div class="score-item" data-tooltip="Measures the initial troponin level relative to the lab's upper limit of normal (ULN)."><label>Troponin</label> <select id="h_trop" class="score-input"><option value="0">Normal (0)</option><option value="1">1-3x normal (1)</option><option value="2">> 3x normal (2)</option></select></div>
-                    <div class="score-display">HEART Score: <span id="heart-score-display">0</span></div>
-                </div>
-                <div class="score-section">
-                    <h3>TIMI Score</h3>
-                    <div class="timi-checkbox-item" data-tooltip="Patient is 65 years of age or older."><input type="checkbox" id="t_age" class="timi-input"><label for="t_age">Age ≥ 65 years</label></div>
-                    <div class="timi-checkbox-item" data-tooltip="Patient has 3 or more risk factors for CAD (Family Hx, HTN, HLD, Diabetes, Smoker)."><input type="checkbox" id="t_risk" class="timi-input"><label for="t_risk">≥ 3 CAD risk factors</label></div>
-                    <div class="timi-checkbox-item" data-tooltip="Patient has a known coronary stenosis of 50% or more."><input type="checkbox" id="t_cad" class="timi-input"><label for="t_cad">Known CAD (stenosis ≥ 50%)</label></div>
-                    <div class="timi-checkbox-item" data-tooltip="Patient has taken aspirin at any dose within the last 7 days."><input type="checkbox" id="t_aspirin" class="timi-input"><label for="t_aspirin">Aspirin use in past 7 days</label></div>
-                    <div class="timi-checkbox-item" data-tooltip="Patient has had at least two episodes of rest angina in the last 24 hours."><input type="checkbox" id="t_angina" class="timi-input"><label for="t_angina">Severe angina (≥ 2 episodes in 24h)</label></div>
-                    <div class="timi-checkbox-item" data-tooltip="ECG shows new, transient ST-segment deviation of at least 0.5mm."><input type="checkbox" id="t_st" class="timi-input"><label for="t_st">ST deviation ≥ 0.5mm</label></div>
-                    <div class="timi-checkbox-item" data-tooltip="Initial cardiac markers (Troponin or CK-MB) are elevated."><input type="checkbox" id="t_marker" class="timi-input"><label for="t_marker">Positive cardiac marker</label></div>
-                    <div class="score-display">TIMI Score: <span id="timi-score-display">0</span></div>
                 </div>
             </div>
         </div>
@@ -347,7 +304,7 @@
         </div>
     </div>
     <div class="attribution-footer">
-        Developed by Dr. Erfan Alinejad Ghadi, Iranian MD (License No. 219890) and Fatemeh Babapour, B.Sc., Laboratory Sciences.
+        Developed by: Erfan Alinejad Ghadi, MD & Fatemeh Babapour, BSc.
     </div>
 </div>
 
@@ -357,7 +314,6 @@
     const closeModalBtn = document.getElementById('modal-close-btn');
     
     window.addEventListener('load', () => {
-        // Show modal on first visit of the session
         if (!sessionStorage.getItem('modalShown')) {
             usageModal.classList.add('active');
         }
@@ -376,13 +332,14 @@
     const pretestSlider = document.getElementById('pretest-slider');
     const pretestValueDisplay = document.getElementById('pretest-value');
     
-    let preTestProbability = 0.15; // Default value, now mutable
+    let preTestProbability = 0.15;
 
     const probabilityToOdds = p => p / (1 - p);
     const oddsToProbability = o => o / (1 + o);
 
-    function calculateFindingsProbability() {
+    function calculatePostTestProbability() {
         let compositeLR = 1.0;
+        // This loop will now only ever find one active item, if any.
         document.querySelectorAll('.finding-item').forEach(item => {
             const state = item.dataset.state;
             if (state === 'present') compositeLR *= parseFloat(item.dataset.lrPos);
@@ -395,18 +352,7 @@
     }
 
     function updateLiveReport() {
-        const activeTab = document.querySelector('.tab-button.active').dataset.tab;
-
-        if (activeTab === 'scores') {
-            updateReportForScores();
-        } else {
-            updateReportForFindings();
-        }
-        updateActiveFindings();
-    }
-
-    function updateReportForFindings() {
-        const finalProb = calculateFindingsProbability();
+        const finalProb = calculatePostTestProbability();
         const probPercent = finalProb * 100;
         let riskCategory, riskClass, recommendationText;
 
@@ -422,7 +368,7 @@
         }
 
         liveReportCard.innerHTML = `
-            <div class="label">Post-Test Probability (from Findings)</div>
+            <div class="label">Post-Test Probability</div>
             <div class="value ${riskClass}">${probPercent.toFixed(1)}%</div>
             <div class="interpretation">${riskCategory}</div>
             <div class="recommendation ${riskClass}">
@@ -430,77 +376,49 @@
                 <p>${recommendationText}</p>
             </div>
         `;
+        updateActiveFindings();
     }
 
-    function updateReportForScores() {
-        // HEART Score Calculation
-        let heartScore = 0;
-        document.querySelectorAll('#scores .score-input').forEach(input => { heartScore += parseInt(input.value, 10); });
-        document.getElementById('heart-score-display').textContent = heartScore;
-        
-        let heartRisk, heartMace, heartClass;
-        if (heartScore <= 3) { heartRisk = 'Low Risk'; heartMace = '1.7%'; heartClass = 'low'; }
-        else if (heartScore <= 6) { heartRisk = 'Intermediate Risk'; heartMace = '16.6%'; heartClass = 'medium'; }
-        else { heartRisk = 'High Risk'; heartMace = '50.1%'; heartClass = 'high'; }
-
-        // TIMI Score Calculation
-        let timiScore = 0;
-        document.querySelectorAll('#scores .timi-input').forEach(input => { if (input.checked) timiScore++; });
-        document.getElementById('timi-score-display').textContent = timiScore;
-
-        let timiRisk, timiMace, timiClass;
-        if (timiScore <= 1) { timiRisk = 'Low Risk'; timiMace = '4.7%'; timiClass = 'low'; }
-        else if (timiScore <= 4) { timiRisk = 'Intermediate Risk'; timiMace = '12.8-26.2%'; timiClass = 'medium'; }
-        else { timiRisk = 'High Risk'; timiMace = '40.9%'; timiClass = 'high'; }
-
-        liveReportCard.innerHTML = `
-            <div class="label">Risk Stratification (from Scores)</div>
-            <div class="interpretation" style="margin-top: 1rem;">
-                HEART Score: <strong class="${heartClass}">${heartRisk}</strong> (${heartMace} MACE)
-            </div>
-            <div class="interpretation" style="margin-top: 0.5rem;">
-                TIMI Score: <strong class="${timiClass}">${timiRisk}</strong> (${timiMace} MACE)
-            </div>
-            <div class="recommendation ${heartClass}">
-                <h4><i class="fas fa-info-circle"></i> Score-Based Guidance</h4>
-                <p>Use these validated scores to guide disposition. Low-risk scores may support early discharge, while high-risk scores warrant admission and further investigation.</p>
-            </div>
-        `;
-    }
-    
     function updateActiveFindings() {
-        const presentFindings = Array.from(document.querySelectorAll('.finding-item.present'));
-        const absentFindings = Array.from(document.querySelectorAll('.finding-item.absent'));
+        const activeFinding = document.querySelector('.finding-item.present, .finding-item.absent');
         
-        if (presentFindings.length === 0 && absentFindings.length === 0) {
-            activeFindingsContainer.innerHTML = `<h4>Active Findings</h4><p style="color: var(--subtle-text);">Select findings to see a summary here.</p>`;
+        if (!activeFinding) {
+            activeFindingsContainer.innerHTML = `<h4>Active Finding</h4><p style="color: var(--subtle-text);">Select one finding to see a summary here.</p>`;
             return;
         }
 
-        let html = '<h4>Active Findings</h4><ul>';
-        presentFindings.forEach(item => {
-            const text = item.querySelector('.finding-text').textContent;
-            html += `<li class="present-finding"><i class="fas fa-arrow-up"></i> ${text}</li>`;
-        });
-        absentFindings.forEach(item => {
-            const text = item.querySelector('.finding-text').textContent;
-            html += `<li class="absent-finding"><i class="fas fa-arrow-down"></i> ${text}</li>`;
-        });
-        html += '</ul>';
+        const text = activeFinding.querySelector('.finding-text').textContent;
+        const isPresent = activeFinding.classList.contains('present');
+        const findingClass = isPresent ? 'present-finding' : 'absent-finding';
+        const iconClass = isPresent ? 'fa-arrow-up' : 'fa-arrow-down';
+        
+        let html = `<h4>Active Finding</h4><ul><li class="${findingClass}"><i class="fas ${iconClass}"></i> ${text}</li></ul>`;
         activeFindingsContainer.innerHTML = html;
     }
 
     function handleFindingClick(event) {
         const button = event.target.closest('.btn-present, .btn-absent');
         if (!button) return;
-        const item = button.closest('.finding-item');
-        const currentState = item.dataset.state;
-        let newState = 'neutral';
-        if (button.classList.contains('btn-present')) newState = (currentState === 'present') ? 'neutral' : 'present';
-        else if (button.classList.contains('btn-absent')) newState = (currentState === 'absent') ? 'neutral' : 'absent';
-        item.dataset.state = newState;
-        item.classList.remove('present', 'absent');
-        if (newState !== 'neutral') item.classList.add(newState);
+        
+        const clickedItem = button.closest('.finding-item');
+        const currentState = clickedItem.dataset.state;
+        const buttonType = button.classList.contains('btn-present') ? 'present' : 'absent';
+        
+        // Determine the next state for the clicked item
+        const nextState = (currentState === buttonType) ? 'neutral' : buttonType;
+
+        // **NEW LOGIC: Reset all findings first**
+        document.querySelectorAll('.finding-item').forEach(item => {
+            item.dataset.state = 'neutral';
+            item.classList.remove('present', 'absent');
+        });
+
+        // **Apply the new state ONLY to the clicked item**
+        if (nextState !== 'neutral') {
+            clickedItem.dataset.state = nextState;
+            clickedItem.classList.add(nextState);
+        }
+        
         updateLiveReport();
     }
     
@@ -511,7 +429,6 @@
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         clickedTab.classList.add('active');
         document.getElementById(clickedTab.dataset.tab).classList.add('active');
-        updateLiveReport();
     }
 
     function resetForm() {
@@ -519,8 +436,6 @@
             item.dataset.state = 'neutral';
             item.classList.remove('present', 'absent');
         });
-        document.querySelectorAll('#scores .score-input').forEach(s => s.value = '0');
-        document.querySelectorAll('#scores .timi-input').forEach(c => c.checked = false);
         
         pretestSlider.value = 15;
         preTestProbability = 0.15;
@@ -541,8 +456,12 @@
             const lrNeg = item.dataset.lrNeg;
             const btnPresent = item.querySelector('.btn-present');
             const btnAbsent = item.querySelector('.btn-absent');
-            if(btnPresent) btnPresent.innerHTML += ` (${lrPos})`;
-            if(btnAbsent) btnAbsent.innerHTML += ` (${lrNeg})`;
+            if (btnPresent && !btnPresent.textContent.includes('(')) {
+                btnPresent.innerHTML += ` (${lrPos})`;
+            }
+            if (btnAbsent && !btnAbsent.textContent.includes('(')) {
+                btnAbsent.innerHTML += ` (${lrNeg})`;
+            }
         });
     }
 
@@ -569,7 +488,6 @@
     // Initial setup
     applyInitialTheme();
     inputPanel.addEventListener('click', handleFindingClick);
-    inputPanel.addEventListener('change', updateLiveReport);
     document.querySelector('.tab-nav').addEventListener('click', handleTabClick);
     window.addEventListener('load', () => {
         setButtonLRs();
