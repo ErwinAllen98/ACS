@@ -340,14 +340,16 @@
 
     function calculatePostTestProbability() {
         let compositeLR = 1.0;
-        document.querySelectorAll('.finding-item.present, .finding-item.absent').forEach(item => {
-            const state = item.dataset.state;
+        // This loop will now only ever find one active item, if any.
+        const activeFinding = document.querySelector('.finding-item.present, .finding-item.absent');
+        if (activeFinding) {
+            const state = activeFinding.dataset.state;
             if (state === 'present') {
-                compositeLR *= parseFloat(item.dataset.lrPos);
+                compositeLR = parseFloat(activeFinding.dataset.lrPos);
             } else if (state === 'absent') {
-                compositeLR *= parseFloat(item.dataset.lrNeg);
+                compositeLR = parseFloat(activeFinding.dataset.lrNeg);
             }
-        });
+        }
         
         const preTestOdds = probabilityToOdds(preTestProbability);
         const postTestOdds = preTestOdds * compositeLR;
@@ -383,22 +385,19 @@
     }
 
     function updateActiveFindings() {
-        const activeFindings = document.querySelectorAll('.finding-item.present, .finding-item.absent');
+        const activeFinding = document.querySelector('.finding-item.present, .finding-item.absent');
         
-        if (activeFindings.length === 0) {
-            activeFindingsContainer.innerHTML = `<h4>Active Findings</h4><p style="color: var(--subtle-text);">Select findings to see a summary here.</p>`;
+        if (!activeFinding) {
+            activeFindingsContainer.innerHTML = `<h4>Active Finding</h4><p style="color: var(--subtle-text);">Select one finding to see a summary here.</p>`;
             return;
         }
 
-        let html = '<h4>Active Findings</h4><ul>';
-        activeFindings.forEach(item => {
-            const text = item.querySelector('.finding-text').textContent;
-            const isPresent = item.classList.contains('present');
-            const findingClass = isPresent ? 'present-finding' : 'absent-finding';
-            const iconClass = isPresent ? 'fa-arrow-up' : 'fa-arrow-down';
-            html += `<li class="${findingClass}"><i class="fas ${iconClass}"></i> ${text}</li>`;
-        });
-        html += '</ul>';
+        const text = activeFinding.querySelector('.finding-text').textContent;
+        const isPresent = activeFinding.classList.contains('present');
+        const findingClass = isPresent ? 'present-finding' : 'absent-finding';
+        const iconClass = isPresent ? 'fa-arrow-up' : 'fa-arrow-down';
+        
+        let html = `<h4>Active Finding</h4><ul><li class="${findingClass}"><i class="fas ${iconClass}"></i> ${text}</li></ul>`;
         activeFindingsContainer.innerHTML = html;
     }
 
@@ -407,29 +406,22 @@
         if (!button) return;
 
         const clickedItem = button.closest('.finding-item');
-        const tabContent = clickedItem.closest('.tab-content');
-        
         const currentState = clickedItem.dataset.state;
         const buttonType = button.classList.contains('btn-present') ? 'present' : 'absent';
         
-        // **CORRECTED LOGIC:** Determine the next state.
-        // If the clicked button is already active, the next state is neutral (toggling off).
-        // Otherwise, the next state is the type of the button clicked.
+        // Determine the next state for the clicked item.
         const nextState = (currentState === buttonType) ? 'neutral' : buttonType;
 
-        // Reset all other findings within the SAME tab.
-        tabContent.querySelectorAll('.finding-item').forEach(item => {
-            if (item !== clickedItem) {
-                item.dataset.state = 'neutral';
-                item.classList.remove('present', 'absent');
-            }
+        // **منطق جدید و صحیح: تمام یافته‌ها در کل سند را ریست کنید**
+        document.querySelectorAll('.finding-item').forEach(item => {
+            item.dataset.state = 'neutral';
+            item.classList.remove('present', 'absent');
         });
 
-        // Apply the new state to the clicked item.
-        clickedItem.dataset.state = nextState;
-        clickedItem.classList.remove('present', 'absent'); // Clear old classes
+        // وضعیت جدید را فقط برای آیتم کلیک‌شده اعمال کنید (اگر در حال خاموش شدن نباشد)
         if (nextState !== 'neutral') {
-            clickedItem.classList.add(nextState); // Add new class if not neutral
+            clickedItem.dataset.state = nextState;
+            clickedItem.classList.add(nextState);
         }
         
         updateLiveReport();
