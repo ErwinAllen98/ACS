@@ -19,6 +19,7 @@
             --present-bg: #e8f5e9; --present-border: #388e3c; --present-text: #1b5e20;
             --risk-low: #388e3c; --risk-medium: #f57c00; --risk-high: #d93025;
             --preset-active-bg: #e0f2f1; --preset-active-border: #00796b;
+            --tooltip-bg: #323232; --tooltip-text: #ffffff;
         }
         body.dark-mode {
             --primary-color: #4db6ac; --secondary-color: #80cbc4;
@@ -27,6 +28,7 @@
             --shadow: 0 4px 12px rgba(0,0,0,0.25);
             --present-bg: #1a331c; --present-border: #4caf50; --present-text: #a5d6a7;
             --preset-active-bg: #1a3330; --preset-active-border: #4db6ac;
+            --tooltip-bg: #e0e0e0; --tooltip-text: #121212;
         }
         *, *::before, *::after { box-sizing: border-box; }
         html { font-size: 16px; scroll-behavior: smooth; }
@@ -80,21 +82,21 @@
                 border-left: 1px solid var(--border-color);
             }
         }
-        .tab-nav { display: flex; flex-wrap: wrap; border-bottom: 2px solid var(--border-color); margin-bottom: 1.5rem; }
-        .tab-button {
-            flex: 1;
-            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-            padding: 0.75rem 1rem; border: none; background: none; cursor: pointer;
-            font-size: 0.9rem; font-weight: 600; color: var(--subtle-text);
-            border-bottom: 3px solid transparent; transition: all 0.2s ease;
-            text-align: center;
+        
+        .section-header {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin: 2.5rem 0 1.5rem 0;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
-        @media (min-width: 768px) { .tab-button { font-size: 1rem; padding: 0.75rem 1.25rem; } }
-        .tab-button.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
-        .tab-button:hover { background-color: rgba(128,128,128,0.1); }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .section-header:first-of-type {
+            margin-top: 0;
+        }
         
         .finding-grid {
             display: grid; grid-template-columns: 1fr; gap: 1rem;
@@ -130,7 +132,7 @@
         .preset-btn.active { background-color: var(--preset-active-bg); border-color: var(--preset-active-border); color: var(--primary-color); font-weight: 700; }
         .selected-prob-display { margin-top: 1rem; padding: 0.75rem; border-radius: 8px; text-align: center; background-color: var(--bg-color); font-weight: 600; color: var(--secondary-color); }
         
-        .live-report-card { background-color: var(--surface-color); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+        .live-report-card { background-color: var(--surface-color); border-radius: 12px; padding: 1.5rem; }
         @media (min-width: 768px) { .live-report-card { padding: 2rem; } }
         .live-report-card .initial-prompt { text-align: center; color: var(--subtle-text); }
         
@@ -161,13 +163,13 @@
         body.dark-mode .clinical-pathway.medium { background-color: #3e2723; color: #ffcc80; }
         .clinical-pathway.high { background-color: #fbe9e7; border-color: var(--risk-high); color: #b71c1c; }
         
-        #active-findings-summary { background-color: var(--surface-color); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+        #active-findings-summary { background-color: var(--surface-color); border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem; }
         #active-findings-summary h4 { margin-top: 0; color: var(--secondary-color); }
         #active-findings-summary ul { list-style: none; padding: 0; margin: 0; }
         #active-findings-summary li { display: flex; align-items: center; gap: 0.75rem; padding: 0.35rem 0; font-size: 0.95rem; }
         #active-findings-summary .present-finding { color: var(--present-text); font-weight: 500; }
         
-        .btn-reset { width: 100%; padding: 1rem; font-size: 1.1rem; font-weight: 600; border-radius: 10px; border: none; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; background-color: #6c757d; color: white; }
+        .btn-reset { width: 100%; padding: 1rem; font-size: 1.1rem; font-weight: 600; border-radius: 10px; border: none; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; background-color: #6c757d; color: white; margin-top: 1.5rem; }
         .btn-reset:hover { background-color: #495057; }
         
         .findings-section-header { margin-top: 2rem; margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border-color); color: var(--secondary-color); font-size: 1.2rem; font-weight: 600; }
@@ -196,6 +198,55 @@
         .slider:before { background-color: #fff; bottom: 4px; content: ""; height: 16px; left: 4px; position: absolute; transition: .4s; width: 16px; border-radius: 50%; }
         input:checked + .slider { background-color: var(--primary-color); }
         input:checked + .slider:before { transform: translateX(20px); }
+        
+        /* ############ NEW: Tooltip Styles ############ */
+        [data-tooltip] {
+            position: relative;
+            cursor: help;
+        }
+        [data-tooltip]::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 10px;
+            background-color: var(--tooltip-bg);
+            color: var(--tooltip-text);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            line-height: 1.4;
+            white-space: normal;
+            width: 250px;
+            text-align: left;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 10;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        [data-tooltip]::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 4px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: var(--tooltip-bg) transparent transparent transparent;
+            z-index: 10;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        [data-tooltip]:hover::after,
+        [data-tooltip]:hover::before {
+            opacity: 1;
+            visibility: visible;
+        }
     </style>
 </head>
 <body>
@@ -217,24 +268,20 @@
     
     <div class="dashboard-grid">
         <div class="input-panel" id="input-panel">
-            <nav class="tab-nav">
-                <button class="tab-button active" data-tab="pretest-tab"><i class="fas fa-sliders-h"></i> 1. Set Pre-Test Probability</button>
-                <button class="tab-button" data-tab="history-tab"><i class="fas fa-book-medical"></i> 2. History & Risks</button>
-                <button class="tab-button" data-tab="clinical-tab"><i class="fas fa-diagnoses"></i> 3. Pain & Physical Findings</button>
-            </nav>
             
-            <!-- Tab 1: Pre-Test Probability -->
-            <div id="pretest-tab" class="tab-content active">
+            <!-- Section 1: Pre-Test Probability -->
+            <h2 class="section-header"><i class="fas fa-sliders-h"></i> 1. Set Pre-Test Probability</h2>
+            <div id="pretest-section">
                 <div class="pretest-prob-card" id="pretest-card">
                     <h4>Select Clinical Setting</h4>
                     <p class="guidance-text">Choose the setting that best matches your practice to set the baseline prevalence of ACS.</p>
                     <div class="preset-buttons">
-                        <button class="preset-btn" data-value="0.35">Cardiac Center (35%)</button>
-                        <button class="preset-btn" data-value="0.20">Urban ED (20%)</button>
-                        <button class="preset-btn" data-value="0.15">Community ED (15%)</button>
-                        <button class="preset-btn" data-value="0.08">Urgent Care (8%)</button>
-                        <button class="preset-btn" data-value="0.05">Rural Clinic (5%)</button>
-                        <button class="preset-btn" data-value="0.03">Primary Care (3%)</button>
+                        <button class="preset-btn" data-value="0.35" data-tooltip="A specialized hospital focused on heart conditions, where patients are often high-risk or have been referred for advanced care.">Cardiac Center (35%)</button>
+                        <button class="preset-btn" data-value="0.20" data-tooltip="A busy emergency department in a major city, seeing a wide range of acuities and a high volume of patients.">Urban ED (20%)</button>
+                        <button class="preset-btn" data-value="0.15" data-tooltip="An emergency department in a smaller town or suburb, which may have fewer resources than a large urban center.">Community ED (15%)</button>
+                        <button class="preset-btn" data-value="0.08" data-tooltip="A walk-in clinic for acute but non-life-threatening conditions. The overall patient acuity is lower than in an ED.">Urgent Care (8%)</button>
+                        <button class="preset-btn" data-value="0.05" data-tooltip="A healthcare facility in a less populated area, often serving as the first point of contact for a wide range of medical issues.">Rural Clinic (5%)</button>
+                        <button class="preset-btn" data-value="0.03" data-tooltip="An outpatient setting where patients see their regular doctor. Chest pain is a common complaint, but ACS is rare.">Primary Care (3%)</button>
                     </div>
                     <div class="selected-prob-display">
                         Selected Pre-Test Probability: <span id="current-pretest-display">--%</span>
@@ -242,39 +289,41 @@
                 </div>
             </div>
 
-            <!-- Tab 2: History & Risks -->
-            <div id="history-tab" class="tab-content">
+            <!-- Section 2: History & Risks -->
+            <h2 class="section-header"><i class="fas fa-book-medical"></i> 2. History & Risks</h2>
+            <div id="history-section">
                 <div class="finding-grid">
-                    <div class="finding-item" id="risk-lipids" data-lr-pos="2.24" data-state="neutral"><div class="finding-header"><span class="finding-text">Abnormal Lipids</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" id="risk-smoking" data-lr-pos="1.91" data-state="neutral"><div class="finding-header"><span class="finding-text">Current Smoking</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" id="risk-diabetes" data-lr-pos="2.15" data-state="neutral"><div class="finding-header"><span class="finding-text">Diabetes Mellitus</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" id="risk-hypertension" data-lr-pos="1.59" data-state="neutral"><div class="finding-header"><span class="finding-text">Hypertension</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" id="risk-obesity" data-lr-pos="1.34" data-state="neutral"><div class="finding-header"><span class="finding-text">Abdominal Obesity</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" id="risk-fruits" data-lr-pos="0.80" data-state="neutral"><div class="finding-header"><span class="finding-text">Daily Fruits/Vegetables</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" id="risk-activity" data-lr-pos="0.88" data-state="neutral"><div class="finding-header"><span class="finding-text">Regular Physical Activity</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" id="risk-alcohol" data-lr-pos="0.93" data-state="neutral"><div class="finding-header"><span class="finding-text">Regular Alcohol Intake</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                    <div class="finding-item" id="risk-lipids" data-lr-pos="2.24" data-state="neutral"><div class="finding-header"><span class="finding-text" data-tooltip="Based on the ApoB/ApoA1 ratio, a strong predictor of MI risk. This represents a higher level of 'bad' cholesterol carriers compared to 'good' ones.">Abnormal Lipids</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                    <div class="finding-item" id="risk-smoking" data-lr-pos="1.91" data-state="neutral"><div class="finding-header"><span class="finding-text" data-tooltip="Defined in the INTERHEART study as having smoked any tobacco products (e.g., cigarettes, cigars) in the previous 12 months.">Current Smoking</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                    <div class="finding-item" id="risk-diabetes" data-lr-pos="2.15" data-state="neutral"><div class="finding-header"><span class="finding-text" data-tooltip="A self-reported or documented history of Diabetes Mellitus. Diabetes is a major independent risk factor for coronary artery disease.">Diabetes Mellitus</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                    <div class="finding-item" id="risk-hypertension" data-lr-pos="1.59" data-state="neutral"><div class="finding-header"><span class="finding-text" data-tooltip="A self-reported or documented history of high blood pressure, a condition that increases the workload on the heart and arteries.">Hypertension</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                    <div class="finding-item" id="risk-obesity" data-lr-pos="1.34" data-state="neutral"><div class="finding-header"><span class="finding-text" data-tooltip="Defined by a high waist-to-hip ratio, indicating excess fat accumulation around the abdomen, which is strongly linked to cardiac risk.">Abdominal Obesity</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                    <div class="finding-item" id="risk-fruits" data-lr-pos="0.80" data-state="neutral"><div class="finding-header"><span class="finding-text" data-tooltip="Daily consumption of fruits or vegetables. This is a protective factor, associated with a lower risk of cardiovascular events.">Daily Fruits/Vegetables</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                    <div class="finding-item" id="risk-activity" data-lr-pos="0.88" data-state="neutral"><div class="finding-header"><span class="finding-text" data-tooltip="Defined as engaging in at least 4 hours of moderate or strenuous exercise per week. This is a protective factor.">Regular Physical Activity</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                    <div class="finding-item" id="risk-alcohol" data-lr-pos="0.93" data-state="neutral"><div class="finding-header"><span class="finding-text" data-tooltip="Defined as consuming alcohol at least 3 times per week. Moderate, regular intake has been shown to be a protective factor in some studies.">Regular Alcohol Intake</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
                 </div>
             </div>
 
-            <!-- Tab 3: Pain & Physical Findings -->
-            <div id="clinical-tab" class="tab-content">
+            <!-- Section 3: Pain & Physical Findings -->
+            <h2 class="section-header"><i class="fas fa-diagnoses"></i> 3. Pain & Physical Findings</h2>
+            <div id="clinical-section">
                 <h3 class="findings-section-header">Pain Characteristics</h3>
                 <div class="finding-grid">
-                    <div class="finding-item" id="pain-rad-both" data-lr-pos="4.7" data-state="neutral"><div class="finding-header"><span class="finding-text">Radiation to both arms/shoulders</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" id="pain-rad-right" data-lr-pos="2.9" data-state="neutral"><div class="finding-header"><span class="finding-text">Radiation to right arm/shoulder</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" id="pain-rad-left" data-lr-pos="2.3" data-state="neutral"><div class="finding-header"><span class="finding-text">Radiation to left arm/shoulder</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" id="pain-exertion" data-lr-pos="2.4" data-state="neutral"><div class="finding-header"><span class="finding-text">Pain worse with exertion</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" id="pain-ischemia" data-lr-pos="2.1" data-state="neutral"><div class="finding-header"><span class="finding-text">Pain similar to prior ischemia</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" id="pain-positional" data-lr-pos="0.4" data-state="neutral"><div class="finding-header"><span class="finding-text">Positional pain (Reassuring)</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" id="pain-pleuritic" data-lr-pos="0.3" data-state="neutral"><div class="finding-header"><span class="finding-text">Pleuritic pain (Reassuring)</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" id="pain-sharp" data-lr-pos="0.3" data-state="neutral"><div class="finding-header"><span class="finding-text">Sharp or stabbing pain (Reassuring)</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" id="pain-palpation" data-lr-pos="0.2" data-state="neutral"><div class="finding-header"><span class="finding-text">Pain reproduced on palpation</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                    <div class="finding-item" id="pain-rad-both" data-lr-pos="4.7" data-state="neutral"><div class="finding-header"><span class="finding-text" data-tooltip="Pain originating in the chest and spreading (radiating) to both arms or shoulders simultaneously. This is a very high-risk feature for ACS.">Radiation to both arms/shoulders</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                    <div class="finding-item" id="pain-rad-right" data-lr-pos="2.9" data-state="neutral"><div class="finding-header"><span class="finding-text" data-tooltip="Pain originating in the chest and spreading to the right arm or shoulder. This is a significant, high-risk feature.">Radiation to right arm/shoulder</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                    <div class="finding-item" id="pain-rad-left" data-lr-pos="2.3" data-state="neutral"><div class="finding-header"><span class="finding-text" data-tooltip="Pain originating in the chest and spreading to the left arm or shoulder. This is the 'classic' description of cardiac pain radiation.">Radiation to left arm/shoulder</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                    <div class="finding-item" id="pain-exertion" data-lr-pos="2.4" data-state="neutral"><div class="finding-header"><span class="finding-text" data-tooltip="A classic anginal feature where physical activity, like walking or climbing stairs, provokes or worsens the chest pain.">Pain worse with exertion</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                    <div class="finding-item" id="pain-ischemia" data-lr-pos="2.1" data-state="neutral"><div class="finding-header"><span class="finding-text" data-tooltip="The patient recognizes the current pain as being identical in character to a previous documented ischemic event (e.g., prior heart attack or angina).">Pain similar to prior ischemia</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                    <div class="finding-item" id="pain-positional" data-lr-pos="0.4" data-state="neutral"><div class="finding-header"><span class="finding-text" data-tooltip="Pain that consistently changes (gets better or worse) with changes in body position. This suggests a musculoskeletal or non-cardiac origin.">Positional pain (Reassuring)</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                    <div class="finding-item" id="pain-pleuritic" data-lr-pos="0.3" data-state="neutral"><div class="finding-header"><span class="finding-text" data-tooltip="A sharp pain that worsens with deep breathing or coughing. This is characteristic of inflammation of the lung lining (pleurisy) and is not typical for ACS.">Pleuritic pain (Reassuring)</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                    <div class="finding-item" id="pain-sharp" data-lr-pos="0.3" data-state="neutral"><div class="finding-header"><span class="finding-text" data-tooltip="Pain described as 'stabbing' or like a 'knife'. While distressing, this quality is less commonly associated with cardiac ischemia, which is often described as pressure or tightness.">Sharp or stabbing pain (Reassuring)</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                    <div class="finding-item" id="pain-palpation" data-lr-pos="0.2" data-state="neutral"><div class="finding-header"><span class="finding-text" data-tooltip="The exact pain can be consistently reproduced by pressing on a specific area of the chest wall. This strongly suggests a musculoskeletal cause (e.g., costochondritis).">Pain reproduced on palpation</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
                 </div>
 
                 <h3 class="findings-section-header">Physical Findings</h3>
                 <div class="finding-grid">
-                    <div class="finding-item" id="exam-hypotension" data-lr-pos="2.3" data-state="neutral"><div class="finding-header"><span class="finding-text">Hypotension (SBP < 100)</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" id="exam-diaphoresis" data-lr-pos="2.0" data-state="neutral"><div class="finding-header"><span class="finding-text">Diaphoresis (Sweating)</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                    <div class="finding-item" id="exam-hypotension" data-lr-pos="2.3" data-state="neutral"><div class="finding-header"><span class="finding-text" data-tooltip="Systolic Blood Pressure below 100 mmHg. In the context of chest pain, this can be a sign of significant cardiac dysfunction or cardiogenic shock.">Hypotension (SBP < 100)</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                    <div class="finding-item" id="exam-diaphoresis" data-lr-pos="2.0" data-state="neutral"><div class="finding-header"><span class="finding-text" data-tooltip="Profuse sweating, often described as cold and clammy. It results from a massive sympathetic nervous system response to a major cardiac event.">Diaphoresis (Sweating)</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
                 </div>
             </div>
         </div>
@@ -297,8 +346,22 @@
     <div class="modal-content">
         <h2><i class="fas fa-book"></i> Data Sources & References</h2>
         
+        <h3>Pre-Test Probability (Clinical Setting Prevalence)</h3>
+        <p>The baseline probabilities are estimates of ACS prevalence among patients presenting with chest pain in different clinical settings. These are derived from large-scale studies and systematic reviews.</p>
+        <table>
+            <thead><tr><th>Clinical Setting</th><th>Est. Prevalence</th><th>Primary Source(s)</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Cardiac Center</strong></td><td>35%</td><td>Estimates for tertiary referral centers with high-risk populations.</td></tr>
+                <tr><td><strong>Urban ED</strong></td><td>20%</td><td rowspan="2">Fanaroff, A. C., et al. (2015). *JAMA Internal Medicine*.</td></tr>
+                <tr><td><strong>Community ED</strong></td><td>15%</td></tr>
+                <tr><td><strong>Urgent Care</strong></td><td>8%</td><td>General estimates for intermediate acuity settings.</td></tr>
+                <tr><td><strong>Rural Clinic</strong></td><td>5%</td><td rowspan="2">Cayley, W. E., Jr. (2005). *American Family Physician*.</td></tr>
+                <tr><td><strong>Primary Care</strong></td><td>3%</td></tr>
+            </tbody>
+        </table>
+
         <h3>History & Risks (Adjusted)</h3>
-        <p>The risk factors in the "History & Risks" tab are derived from the landmark <strong>INTERHEART study</strong>. This global case-control study used multivariate logistic regression to isolate the independent impact of each risk factor. The published Adjusted Odds Ratios (AORs) were converted to Adjusted Likelihood Ratios (LRs).</p>
+        <p>The risk factors in the "History & Risks" section are derived from the landmark <strong>INTERHEART study</strong>. This global case-control study used multivariate logistic regression to isolate the independent impact of each risk factor. The published Adjusted Odds Ratios (AORs) were converted to Adjusted Likelihood Ratios (LRs).</p>
         <p><strong>Key Principle:</strong> Because these LRs are statistically independent, they can be <strong>multiplied together</strong> to calculate a cumulative risk.</p>
         <table>
             <thead><tr><th>Risk Factor</th><th>Definition from Study</th><th>Adjusted LR+</th></tr></thead>
@@ -316,7 +379,7 @@
         <p style="margin-top: 1rem;"><strong>Primary Source:</strong> Yusuf, S., et al. (2004). Effect of potentially modifiable risk factors associated with myocardial infarction in 52 countries (the INTERHEART study). <em>The Lancet</em>, 364(9438), 937–952.</p>
 
         <h3>Pain & Physical Findings (Adjusted)</h3>
-        <p>To ensure statistical consistency, all findings in the "Pain Characteristics" and "Physical Findings" sections are sourced from a single, high-quality prospective validation study by <strong>Gencer et al.</strong> The study used multivariable logistic regression to identify independent predictors of ACS. This guarantees that all clinical findings are mutually adjusted and can be multiplied together without double-counting risk.</p>
+        <p>To ensure statistical consistency, all findings in the "Pain & Physical Findings" section are sourced from a single, high-quality prospective validation study by <strong>Gencer et al.</strong> The study used multivariable logistic regression to identify independent predictors of ACS. This guarantees that all clinical findings are mutually adjusted and can be multiplied together without double-counting risk.</p>
         <table>
             <thead><tr><th>Finding</th><th>Adjusted LR+</th></tr></thead>
             <tbody>
@@ -334,7 +397,7 @@
             </tbody>
         </table>
         <p style="margin-top: 1rem;"><strong>Primary Source:</strong> Gencer, B., et al. (2010). Prospective Validation of a Clinical Score for 14-Day Risk of Serious Outcomes in Patients With Chest Pain. <em>Archives of Internal Medicine</em>, 170(10), 879–886.</p>
-        <p style="margin-top: 1rem;"><strong>Note:</strong> Other traditional findings like lung rales were not found to be significant <em>independent</em> predictors in this adjusted model, hence their exclusion to maintain the model's integrity.</p>
+        
         <button class="btn-modal-close" id="modal-close-btn">Close</button>
     </div>
 </div>
@@ -361,7 +424,7 @@
         }
 
         let lrHistory = 1.0;
-        document.querySelectorAll('#history-tab .finding-item.present').forEach(finding => {
+        document.querySelectorAll('#history-section .finding-item.present').forEach(finding => {
             lrHistory *= parseFloat(finding.dataset.lrPos);
         });
         
@@ -370,7 +433,7 @@
         const intermediateProbability = oddsToProbability(intermediateOdds);
 
         let lrClinical = 1.0;
-        document.querySelectorAll('#clinical-tab .finding-item.present').forEach(finding => {
+        document.querySelectorAll('#clinical-section .finding-item.present').forEach(finding => {
             lrClinical *= parseFloat(finding.dataset.lrPos);
         });
 
@@ -392,7 +455,7 @@
                 <div class="initial-prompt">
                     <i class="fas fa-arrow-up fa-2x" style="margin-bottom: 1rem;"></i>
                     <h4>Report will appear here</h4>
-                    <p>Please set a Pre-Test Probability on Tab 1 to begin.</p>
+                    <p>Please set a Pre-Test Probability to begin.</p>
                 </div>`;
             updateActiveFindings();
             return;
@@ -497,21 +560,13 @@
         updateLiveReport();
     }
 
-    function switchToTab(tabId) {
-        document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        
-        document.querySelector(`.tab-button[data-tab="${tabId}"]`).classList.add('active');
-        document.getElementById(tabId).classList.add('active');
-    }
-
     pretestCard.addEventListener('click', (event) => {
         const target = event.target;
         if (target.classList.contains('preset-btn')) {
             document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
             target.classList.add('active');
             setPretestProbability(parseFloat(target.dataset.value));
-            setTimeout(() => switchToTab('history-tab'), 200);
+            document.getElementById('history-section').scrollIntoView({ behavior: 'smooth' });
         }
     });
 
@@ -567,12 +622,6 @@
         updateLiveReport();
     }
     
-    document.querySelector('.tab-nav').addEventListener('click', (event) => {
-        const clickedTab = event.target.closest('.tab-button');
-        if (!clickedTab) return;
-        switchToTab(clickedTab.dataset.tab);
-    });
-
     function resetForm() {
         document.querySelectorAll('.finding-item').forEach(item => {
             setFindingState(item.id, 'neutral');
@@ -581,7 +630,6 @@
         document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
         setPretestProbability(null);
         
-        switchToTab('pretest-tab');
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
     
