@@ -1,213 +1,231 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evidence-Based ACS Risk Calculator</title>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --primary-color: #00796b; --secondary-color: #004d40;
-            --bg-color: #f8f9fa; --surface-color: #ffffff;
-            --border-color: #dee2e6; --text-color: #212529; --subtle-text: #6c757d;
-            --shadow: 0 4px 12px rgba(0,0,0,0.08);
-            --present-bg: #e8f5e9; --present-border: #388e3c; --present-text: #1b5e20;
-            --absent-bg: #fbe9e7; --absent-border: #d32f2f; --absent-text: #b71c1c;
-            --risk-low: #388e3c; --risk-medium: #f57c00; --risk-high: #d93025;
-            --preset-active-bg: #e0f2f1; --preset-active-border: #00796b;
-        }
-        body.dark-mode {
-            --primary-color: #4db6ac; --secondary-color: #80cbc4;
-            --bg-color: #121212; --surface-color: #1e1e1e;
-            --border-color: #424242; --text-color: #e0e0e0; --subtle-text: #9e9e9e;
-            --shadow: 0 4px 12px rgba(0,0,0,0.25);
-            --present-bg: #1a331c; --present-border: #4caf50; --present-text: #a5d6a7;
-            --absent-bg: #3c1e1a; --absent-border: #f44336; --absent-text: #ef9a9a;
-            --preset-active-bg: #1a3330; --preset-active-border: #4db6ac;
-        }
-        *, *::before, *::after { box-sizing: border-box; }
-        html { font-size: 16px; scroll-behavior: smooth; }
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; margin: 0;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .container {
-            max-width: 1400px; margin: 1rem auto; background: var(--surface-color); border-radius: 16px;
-            border: 1px solid var(--border-color); box-shadow: var(--shadow);
-            overflow: hidden; transition: background-color 0.3s, border-color 0.3s;
-        }
-        @media (min-width: 768px) { .container { margin: 2rem auto; } }
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Evidence-Based ACS Risk Calculator</title>
+ 
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+ 
+ <style>
+ :root {
+ --primary-color: #00796b; --secondary-color: #004d40;
+ --bg-color: #f8f9fa; --surface-color: #ffffff;
+ --border-color: #dee2e6; --text-color: #212529; --subtle-text: #6c757d;
+ --shadow: 0 4px 12px rgba(0,0,0,0.08);
+ --present-bg: #e8f5e9; --present-border: #388e3c; --present-text: #1b5e20;
+ --risk-low: #388e3c; --risk-medium: #f57c00; --risk-high: #d93025;
+ --preset-active-bg: #e0f2f1; --preset-active-border: #00796b;
+ }
+ body.dark-mode {
+ --primary-color: #4db6ac; --secondary-color: #80cbc4;
+ --bg-color: #121212; --surface-color: #1e1e1e;
+ --border-color: #424242; --text-color: #e0e0e0; --subtle-text: #9e9e9e;
+ --shadow: 0 4px 12px rgba(0,0,0,0.25);
+ --present-bg: #1a331c; --present-border: #4caf50; --present-text: #a5d6a7;
+ --preset-active-bg: #1a3330; --preset-active-border: #4db6ac;
+ }
+ *, *::before, *::after { box-sizing: border-box; }
+ html { font-size: 16px; scroll-behavior: smooth; }
+ body {
+ font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+ background-color: var(--bg-color); color: var(--text-color); line-height: 1.6; margin: 0;
+ transition: background-color 0.3s, color 0.3s;
+ }
+ .container {
+ max-width: 1400px; margin: 1rem auto; background: var(--surface-color); border-radius: 16px;
+ border: 1px solid var(--border-color); box-shadow: var(--shadow);
+ overflow: hidden; transition: background-color 0.3s, border-color 0.3s;
+ }
+ @media (min-width: 768px) { .container { margin: 2rem auto; } }
 
-        .header { 
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 1.5rem; border-bottom: 1px solid var(--border-color); 
-        }
-        @media (min-width: 768px) { .header { padding: 1.5rem 2rem; } }
+ .header { 
+ display: flex; justify-content: space-between; align-items: center;
+ padding: 1.5rem; border-bottom: 1px solid var(--border-color); 
+ }
+ @media (min-width: 768px) { .header { padding: 1.5rem 2rem; } }
 
-        .header-text { text-align: left; }
-        .header h1 { color: var(--secondary-color); margin: 0 0 0.25rem 0; font-weight: 700; font-size: 1.4em; }
-        .header p { color: var(--subtle-text); margin: 0; font-size: 0.9rem; }
-        @media (min-width: 768px) { .header h1 { font-size: 1.6em; } .header p { font-size: 1rem; } }
+ .header-text { text-align: left; }
+ .header h1 { color: var(--secondary-color); margin: 0 0 0.25rem 0; font-weight: 700; font-size: 1.4em; }
+ .header p { color: var(--subtle-text); margin: 0; font-size: 0.9rem; }
+ @media (min-width: 768px) { .header h1 { font-size: 1.6em; } .header p { font-size: 1rem; } }
 
-        .dashboard-grid { 
-            display: flex; 
-            flex-direction: column; 
-        }
-        .input-panel { order: 2; padding: 1.5rem; }
-        .output-panel { 
-            order: 1; 
-            background-color: var(--bg-color); 
-            padding: 1.5rem;
-            border-bottom: 1px solid var(--border-color);
-        }
+ .dashboard-grid { 
+ display: flex; 
+ flex-direction: column; 
+ }
+ .input-panel { order: 2; padding: 1.5rem; }
+ .output-panel { 
+ order: 1; 
+ background-color: var(--bg-color); 
+ padding: 1.5rem;
+ border-bottom: 1px solid var(--border-color);
+ }
+ @media (min-width: 1024px) {
+ .dashboard-grid { 
+ display: grid; 
+ grid-template-columns: 65% 35%; 
+ }
+ .input-panel { order: 1; }
+ .output-panel { 
+ order: 2; 
+ position: sticky; 
+ top: 0; 
+ height: 100vh; 
+ overflow-y: auto;
+ border-bottom: none;
+ border-left: 1px solid var(--border-color);
+ }
+ }
+ .tab-nav { display: flex; flex-wrap: wrap; border-bottom: 2px solid var(--border-color); margin-bottom: 1.5rem; }
+ .tab-button {
+ flex: 1;
+ display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+ padding: 0.75rem 1rem; border: none; background: none; cursor: pointer;
+ font-size: 0.9rem; font-weight: 600; color 
+: var(--subtle-text);
+ border-bottom: 3px solid transparent; transition: all 0.2s ease;
+ text-align: center;
+ }
+ @media (min-width: 768px) { .tab-button { font-size: 1rem; padding: 0.75rem 1.25rem; } }
+ .tab-button.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
+ .tab-button:hover { background-color: rgba(128,128,128,0.1); }
+ .tab-content { display: none; }
+ .tab-content.active { display: block; animation: fadeIn 0.5s; }
+ @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        @media (min-width: 1024px) {
-            .dashboard-grid { 
-                display: grid; 
-                grid-template-columns: 65% 35%; 
-            }
-            .input-panel { order: 1; }
-            .output-panel { 
-                order: 2; 
-                position: sticky; 
-                top: 0; 
-                height: 100vh; 
-                overflow-y: auto;
-                border-bottom: none;
-                border-left: 1px solid var(--border-color);
-            }
-        }
-        .tab-nav { display: flex; flex-wrap: wrap; border-bottom: 2px solid var(--border-color); margin-bottom: 1.5rem; }
-        .tab-button {
-            display: flex; align-items: center; gap: 0.5rem;
-            padding: 0.75rem 1rem; border: none; background: none; cursor: pointer;
-            font-size: 0.9rem; font-weight: 600; color: var(--subtle-text);
-            border-bottom: 3px solid transparent; transition: all 0.2s ease;
-        }
-        @media (min-width: 768px) { .tab-button { font-size: 1rem; padding: 0.75rem 1.25rem; } }
-        .tab-button.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
-        .tab-button:hover { background-color: rgba(128,128,128,0.1); }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+ .finding-grid {
+ display: grid; grid-template-columns: 1fr; gap: 1rem;
+ }
+ @media (min-width: 600px) { .finding-grid { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); } }
+ 
+ .finding-item { position: relative; display: flex; flex-direction: column; padding: 0.75rem 1rem; border-radius: 10px; border: 2px solid var(--border-color); background-color: var(--surface-color); transition: all 0.2s ease; }
+ .finding-item.present { background-color: var(--present-bg); border-color: var(--present-border); color: var(--present-text); font-weight: 500; }
+ 
+ .finding-header { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+ .finding-text { flex-grow: 1; font-weight: 500; }
+ 
+ .finding-controls { display: flex; margin-top: 0.5rem; width: 100%; }
+ .btn-present {
+ width: 100%; padding: 0.6rem; border-radius: 6px; border: 1px solid var(--border-color);
+ background-color: var(--surface-color); color: var(--text-color); cursor: pointer; font-size: 0.9rem;
+ display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+ transition: all 0.2s ease;
+ }
+ .btn-present:hover { background-color: var(--present-bg); color: var(--present-text); }
+ .finding-item.present .btn-present { background-color: var(--present-border); color: white; }
+ 
+ .pretest-prob-card { background-color: var(--surface-color); border-radius: 12px; padding: 1.5rem; }
+ .pretest-prob-card h4 { margin-top: 0; color: var(--secondary-color); }
+ .pretest-prob-card .guidance-text { font-size: 0.9rem; color: var(--subtle-text); margin-bottom: 1rem; }
+ .preset-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1rem; }
+ .preset-btn {
+ padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px;
+ background-color: transparent; color: var(--text-color); cursor: pointer;
+ font-weight: 500; text-align: center; transition: all 0.2s ease;
+ }
+ .preset-btn:hover { background-color: var(--bg-color); }
+ .preset-btn.active { background-color: var(--preset-active-bg); border-color: var(--preset-active-border); color: var(--primary-color); font-weight: 700; }
+ .selected-prob-display { margin-top: 1rem; padding: 0.75rem; border-radius: 8px; text-align: center; background-color: var(--bg-color); font-weight: 600; color: var(--secondary-color); }
+ 
+ .live-report-card { background-color: var(--surface-color); border-radius: 12px; padding: 1.5rem; text-align: center; margin-bottom: 1.5rem; }
+ @media (min-width: 768px) { .live-report-card { padding: 2rem; } }
+ .live-report-card .initial-prompt { color: var(--subtle-text); }
+ .live-report-card .label { font-size: 1.1rem; font-weight: 500; color: var(--subtle-text); }
+ .live-report-card .value { font-size: 3.5rem; font-weight: 700; margin: 0.5rem 0; }
+ @media (min-width: 768px) { .live-report-card .value { font-size: 4.5rem; } }
+ .live-report-card .value.low { color: var(--risk-low); }
+ .live-repo 
+rt-card .value.medium { color: var(--risk-medium); }
+ .live-report-card .value.high { color: var(--risk-high); }
+ .live-report-card .interpretation { font-size: 1.2rem; font-weight: 600; }
+ @media (min-width: 768px) { .live-report-card .interpretation { font-size: 1.4rem; } }
+ .live-report-card .recommendation { margin-top: 1.5rem; padding: 1rem; border-radius: 8px; font-size: 0.95rem; border: 2px solid; text-align: left; }
+ .live-report-card .recommendation.low { background-color: var(--present-bg); border-color: var(--risk-low); color: var(--present-text); }
+ .live-report-card .recommendation.medium { background-color: #fff3e0; border-color: var(--risk-medium); color: #e65100; }
+ body.dark-mode .recommendation.medium { background-color: #3e2723; color: #ffcc80; }
+ .live-report-card .recommendation.high { background-color: #fbe9e7; border-color: var(--risk-high); color: #b71c1c; }
+ 
+ #active-findings-summary { background-color: var(--surface-color); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+ #active-findings-summary h4 { margin-top: 0; color: var(--secondary-color); }
+ #active-findings-summary ul { list-style: none; padding: 0; margin: 0; }
+ #active-findings-summary li { display: flex; align-items: center; gap: 0.75rem; padding: 0.35rem 0; font-size: 0.95rem; }
+ #active-findings-summary .present-finding { color: var(--present-text); font-weight: 500; }
+ 
+ .btn-reset { width: 100%; padding: 1rem; font-size: 1.1rem; font-weight: 600; border-radius: 10px; border: none; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; background-color: #6c757d; color: white; }
+ .btn-reset:hover { background-color: #495057; }
+ 
+ .findings-section-header {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--secondary-color);
+    font-size: 1.2rem;
+    font-weight: 600;
+ }
+ .findings-section-header:first-child {
+    margin-top: 0;
+ }
 
-        .finding-grid {
-            display: grid; grid-template-columns: 1fr; gap: 1rem;
-        }
-        @media (min-width: 600px) { .finding-grid { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); } }
-        
-        .finding-item { position: relative; display: flex; flex-direction: column; padding: 0.75rem 1rem; border-radius: 10px; border: 2px solid var(--border-color); background-color: var(--surface-color); transition: all 0.2s ease; }
-        .finding-item.present { background-color: var(--present-bg); border-color: var(--present-border); color: var(--present-text); font-weight: 500; }
-        .finding-item.absent { background-color: var(--absent-bg); border-color: var(--absent-border); color: var(--absent-text); font-weight: 500; }
-        
-        .finding-header { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .finding-text { flex-grow: 1; font-weight: 500; }
-        
-        .finding-controls { display: flex; gap: 0.5rem; margin-top: 0.5rem; width: 100%; }
-        .finding-controls button {
-            flex-grow: 1; padding: 0.5rem; border-radius: 6px; border: 1px solid var(--border-color);
-            background-color: var(--surface-color); color: var(--text-color); cursor: pointer; font-size: 0.9rem;
-            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
-            transition: all 0.2s ease;
-        }
-        .btn-absent:hover { background-color: var(--absent-bg); color: var(--absent-text); }
-        .btn-present:hover { background-color: var(--present-bg); color: var(--present-text); }
-        .finding-item.absent .btn-absent { background-color: var(--absent-border); color: white; }
-        .finding-item.present .btn-present { background-color: var(--present-border); color: white; }
-
-        .pretest-prob-card { background-color: var(--surface-color); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
-        .pretest-prob-card h4 { margin-top: 0; color: var(--secondary-color); }
-        .pretest-prob-card .guidance-text { font-size: 0.9rem; color: var(--subtle-text); margin-bottom: 1rem; }
-        .preset-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1rem; }
-        .preset-btn {
-            padding: 0.75rem; border: 2px solid var(--border-color); border-radius: 8px;
-            background-color: transparent; color: var(--text-color); cursor: pointer;
-            font-weight: 500; text-align: center; transition: all 0.2s ease;
-        }
-        .preset-btn:hover { background-color: var(--bg-color); }
-        .preset-btn.active { background-color: var(--preset-active-bg); border-color: var(--preset-active-border); color: var(--primary-color); font-weight: 700; }
-        .selected-prob-display { margin-top: 1rem; padding: 0.75rem; border-radius: 8px; text-align: center; background-color: var(--bg-color); font-weight: 600; color: var(--secondary-color); }
-        
-        .live-report-card { background-color: var(--surface-color); border-radius: 12px; padding: 1.5rem; text-align: center; margin-bottom: 1.5rem; }
-        @media (min-width: 768px) { .live-report-card { padding: 2rem; } }
-        .live-report-card .initial-prompt { color: var(--subtle-text); }
-        .live-report-card .label { font-size: 1.1rem; font-weight: 500; color: var(--subtle-text); }
-        .live-report-card .value { font-size: 3.5rem; font-weight: 700; margin: 0.5rem 0; }
-        @media (min-width: 768px) { .live-report-card .value { font-size: 4.5rem; } }
-        .live-report-card .value.low { color: var(--risk-low); }
-        .live-report-card .value.medium { color: var(--risk-medium); }
-        .live-report-card .value.high { color: var(--risk-high); }
-        .live-report-card .interpretation { font-size: 1.2rem; font-weight: 600; }
-        @media (min-width: 768px) { .live-report-card .interpretation { font-size: 1.4rem; } }
-        .live-report-card .recommendation { margin-top: 1.5rem; padding: 1rem; border-radius: 8px; font-size: 0.95rem; border: 2px solid; text-align: left; }
-        .live-report-card .recommendation.low { background-color: var(--present-bg); border-color: var(--risk-low); color: var(--present-text); }
-        .live-report-card .recommendation.medium { background-color: #fff3e0; border-color: var(--risk-medium); color: #e65100; }
-        body.dark-mode .recommendation.medium { background-color: #3e2723; color: #ffcc80; }
-        .live-report-card .recommendation.high { background-color: var(--absent-bg); border-color: var(--risk-high); color: var(--absent-text); }
-
-        #active-findings-summary { background-color: var(--surface-color); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
-        #active-findings-summary h4 { margin-top: 0; color: var(--secondary-color); }
-        #active-findings-summary ul { list-style: none; padding: 0; margin: 0; }
-        #active-findings-summary li { display: flex; align-items: center; gap: 0.75rem; padding: 0.35rem 0; font-size: 0.95rem; }
-        #active-findings-summary .present-finding { color: var(--present-text); font-weight: 500; }
-        #active-findings-summary .absent-finding { color: var(--absent-text); font-weight: 500; }
-        
-        .btn-reset { width: 100%; padding: 1rem; font-size: 1.1rem; font-weight: 600; border-radius: 10px; border: none; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; background-color: #6c757d; color: white; }
-        .btn-reset:hover { background-color: #495057; }
-        
-        .attribution-footer { text-align: center; padding: 1.5rem; font-size: 0.9rem; color: var(--subtle-text); }
-        .attribution-footer a { color: var(--primary-color); text-decoration: none; font-weight: 500; }
-        .attribution-footer a:hover { text-decoration: underline; }
-        
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 100; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
-        .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content { background: var(--surface-color); color: var(--text-color); padding: 2rem; border-radius: 16px; width: 90%; max-width: 800px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); transform: translateY(-50px); transition: all 0.3s ease; max-height: 90vh; overflow-y: auto; }
-        .modal-overlay.active .modal-content { transform: translateY(0); }
-        .modal-content h2, .modal-content h3 { color: var(--secondary-color); margin-top: 0; }
-        .modal-content h3 { margin-top: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1rem; }
-        .modal-content table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem; }
-        .modal-content th, .modal-content td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--border-color); }
-        .modal-content th { font-weight: 600; }
-        .modal-content .btn-modal-close { display: block; width: 100%; padding: 0.75rem; margin-top: 1.5rem; background: var(--primary-color); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s; }
-        .modal-content .btn-modal-close:hover { background: var(--secondary-color); }
-        
-        .theme-switch-wrapper { display: flex; align-items: center; gap: 0.5rem; }
-        .theme-switch { display: inline-block; height: 24px; position: relative; width: 44px; }
-        .theme-switch input { display: none; }
-        .slider { background-color: #ccc; bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0; transition: .4s; border-radius: 24px; }
-        .slider:before { background-color: #fff; bottom: 4px; content: ""; height: 16px; left: 4px; position: absolute; transition: .4s; width: 16px; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--primary-color); }
-        input:checked + .slider:before { transform: translateX(20px); }
-    </style>
+ .attribution-footer { text-align: center; padding: 1.5rem; font-size: 0.9rem; color: var(--subtle-text); }
+ .attribution-footer a { color: var(--primary-color); text-decoration: none; font-weight: 500; }
+ .attribution-footer a:hover { text-decoration: underline; }
+ 
+ .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 100; display: flex; justify-content: center; align-items: center; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+ .modal-overlay.active { opacity: 1; visibility: visible; }
+ .modal-content { background: var(--surface-color); color: var(--text-color); padding: 2rem; border-radius: 16px; width: 90%; max-width: 800px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); transform: translateY(-50px); transition: all 0.3s ease; max-height: 90vh; overflow-y: auto; }
+ .modal-overlay.active .modal-content { transform: translateY(0); }
+ .modal-content h2, .modal-content h3 { color: var(--secondary-color); margin-top: 0; }
+ .modal-content h3 { margin-top: 1.5rem; border-top: 1px solid var(--border-color); padding-top: 1rem; }
+ .modal-content table { width: 100%; border-collapse: collapse; margin-top: 1rem; font-size: 0.9rem; }
+ .modal-content th, .modal-content td { padding: 0.75rem; text-align: left; border-bottom: 1px solid var(--border-color); }
+ .modal-content th { font-weight: 600; }
+ .modal-content .btn-modal-close { display: block; width: 100%; padding: 0.75rem 
+; margin-top: 1.5rem; background: var(--primary-color); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s; }
+ .modal-content .btn-modal-close:hover { background: var(--secondary-color); }
+ 
+ .theme-switch-wrapper { display: flex; align-items: center; gap: 0.5rem; }
+ .theme-switch { display: inline-block; height: 24px; position: relative; width: 44px; }
+ .theme-switch input { display: none; }
+ .slider { background-color: #ccc; bottom: 0; cursor: pointer; left: 0; position: absolute; right: 0; top: 0; transition: .4s; border-radius: 24px; }
+ .slider:before { background-color: #fff; bottom: 4px; content: ""; height: 16px; left: 4px; position: absolute; transition: .4s; width: 16px; border-radius: 50%; }
+ input:checked + .slider { background-color: var(--primary-color); }
+ input:checked + .slider:before { transform: translateX(20px); }
+ </style>
 </head>
-<body>
-
-<div class="container">
-    <div class="header">
-        <div class="header-text">
-            <h1>Evidence-Based ACS Risk Calculator</h1>
-            <p>A Bayesian tool for real-time risk stratification of chest pain.</p>
-        </div>
-        <div class="theme-switch-wrapper">
-            <i class="fas fa-sun"></i>
-            <label class="theme-switch">
-                <input type="checkbox" id="theme-toggle">
-                <span class="slider"></span>
-            </label>
-            <i class="fas fa-moon"></i>
-        </div>
-    </div>
-    <div class="dashboard-grid">
-        <div class="output-panel">
+<body><div class="container">
+ <div class="header">
+ <div class="header-text">
+ <h1>Evidence-Based ACS Risk Calculator</h1>
+ <p>A Bayesian tool for real-time risk stratification of chest pain.</p>
+ </div>
+ <div class="theme-switch-wrapper">
+ <i class="fas fa-sun"></i>
+ <label class="theme-switch">
+ <input type="checkbox" id="theme-toggle">
+ <span class="slider"></span>
+ </label>
+ <i class="fas fa-moon"></i>
+ </div>
+ </div>
+ 
+ <div class="dashboard-grid">
+    <div class="input-panel" id="input-panel">
+        <nav class="tab-nav">
+            <button class="tab-button active" data-tab="pretest-tab"><i class="fas fa-sliders-h"></i> 1. Set Pre-Test Probability</button>
+            <button class="tab-button" data-tab="history-tab"><i class="fas fa-book-medical"></i> 2. History & Risks</button>
+            <button class="tab-button" data-tab="clinical-tab"><i class="fas fa-diagnoses"></i> 3. Pain & Physical Findings</button>
+        </nav>
+        
+        <!-- Tab 1: Pre-Test Probability -->
+        <div id="pretest-tab" class="tab-content active">
             <div class="pretest-prob-card" id="pretest-card">
-                <h4>1. Set Pre-Test Probability</h4>
-                <p class="guidance-text">Select the clinical setting that best matches your practice to set the baseline prevalence of ACS.</p>
+                <h4>Select Clinical Setting</h4>
+                <p class="guidance-text">Choose the setting that best matches your practice to set the baseline prevalence of ACS.</p>
                 <div class="preset-buttons">
                     <button class="preset-btn" data-value="0.35">Cardiac Center (35%)</button>
                     <button class="preset-btn" data-value="0.20">Urban ED (20%)</button>
@@ -220,310 +238,318 @@
                     Selected Pre-Test Probability: <span id="current-pretest-display">--%</span>
                 </div>
             </div>
-
-            <div id="live-report-card" class="live-report-card"></div>
-            <div id="active-findings-summary"></div>
-            <button type="button" class="btn-reset" onclick="resetForm()"><i class="fa-solid fa-arrow-rotate-left"></i> <span>Reset All</span></button>
         </div>
-        <div class="input-panel" id="input-panel">
-            <nav class="tab-nav">
-                <button class="tab-button active" data-tab="history"><i class="fas fa-book-medical"></i> History & Risks</button>
-                <button class="tab-button" data-tab="pain"><i class="fas fa-heart-crack"></i> Pain Characteristics</button>
-                <button class="tab-button" data-tab="exam"><i class="fas fa-stethoscope"></i> Physical Findings</button>
-                <button class="tab-button" data-tab="ecg"><i class="fas fa-heart-pulse"></i> ECG Findings</button>
-            </nav>
-            
-            <!-- History & Risks (Cardiac Risk) -->
-            <div id="history" class="tab-content active">
-                <div class="finding-grid">
-                    <!-- Data from INTERHEART Study - Adjusted & Multipliable -->
-                    <div class="finding-item" data-lr-pos="2.24" data-lr-neg="0.85" data-state="neutral"><div class="finding-header"><span class="finding-text">Abnormal Lipids</span></div><div class="finding-controls"><button type="button" class="btn-absent">Absent</button><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" data-lr-pos="1.91" data-lr-neg="0.88" data-state="neutral"><div class="finding-header"><span class="finding-text">Current Smoking</span></div><div class="finding-controls"><button type="button" class="btn-absent">Absent</button><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" data-lr-pos="2.15" data-lr-neg="0.94" data-state="neutral"><div class="finding-header"><span class="finding-text">Diabetes Mellitus</span></div><div class="finding-controls"><button type="button" class="btn-absent">Absent</button><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" data-lr-pos="1.59" data-lr-neg="0.89" data-state="neutral"><div class="finding-header"><span class="finding-text">Hypertension</span></div><div class="finding-controls"><button type="button" class="btn-absent">Absent</button><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" data-lr-pos="1.34" data-lr-neg="0.85" data-state="neutral"><div class="finding-header"><span class="finding-text">Abdominal Obesity</span></div><div class="finding-controls"><button type="button" class="btn-absent">Absent</button><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" data-lr-pos="0.80" data-lr-neg="1.14" data-state="neutral"><div class="finding-header"><span class="finding-text">Daily Fruits/Vegetables</span></div><div class="finding-controls"><button type="button" class="btn-absent">Absent</button><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" data-lr-pos="0.88" data-lr-neg="1.03" data-state="neutral"><div class="finding-header"><span class="finding-text">Regular Physical Activity</span></div><div class="finding-controls"><button type="button" class="btn-absent">Absent</button><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" data-lr-pos="0.93" data-lr-neg="1.02" data-state="neutral"><div class="finding-header"><span class="finding-text">Regular Alcohol Intake</span></div><div class="finding-controls"><button type="button" class="btn-absent">Absent</button><button type="button" class="btn-present">Present</button></div></div>
-                </div>
+
+        <!-- Tab 2: History & Risks -->
+        <div id="history-tab" class="tab-content">
+            <div class="finding-grid">
+                <div class="finding-item" id="risk-lipids" data-lr-pos="2.24" data-state="neutral"><div class="finding-header"><span class="finding-text">Abnormal Lipids</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                <div class="finding-item" id="risk-smoking" data-lr-pos="1.91" data-state="neutral"> 
+<div class="finding-header"><span class="finding-text">Current Smoking</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                <div class="finding-item" id="risk-diabetes" data-lr-pos="2.15" data-state="neutral"><div class="finding-header"><span class="finding-text">Diabetes Mellitus</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                <div class="finding-item" id="risk-hypertension" data-lr-pos="1.59" data-state="neutral"><div class="finding-header"><span class="finding-text">Hypertension</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                <div class="finding-item" id="risk-obesity" data-lr-pos="1.34" data-state="neutral"><div class="finding-header"><span class="finding-text">Abdominal Obesity</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                <div class="finding-item" id="risk-fruits" data-lr-pos="0.80" data-state="neutral"><div class="finding-header"><span class="finding-text">Daily Fruits/Vegetables</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                <div class="finding-item" id="risk-activity" data-lr-pos="0.88" data-state="neutral"><div class="finding-header"><span class="finding-text">Regular Physical Activity</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                <div class="finding-item" id="risk-alcohol" data-lr-pos="0.93" data-state="neutral"><div class="finding-header"><span class="finding-text">Regular Alcohol Intake</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Pain & Physical Findings -->
+        <div id="clinical-tab" class="tab-content">
+            <h3 class="findings-section-header">Pain Characteristics</h3>
+            <div class="finding-grid">
+                <div class="finding-item" id="pain-rad-both" data-lr-pos="4.7" data-state="neutral"><div class="finding-header"><span class="finding-text">Radiation to both arms/shoulders</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                <div class="finding-item" id="pain-rad-right" data-lr-pos="2.9" data-state="neutral"><div class="finding-header"><span class="finding-text">Radiation to right arm/shoulder</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                <div class="finding-item" id="pain-rad-left" data-lr-pos="2.3" data-state="neutral"><div class="finding-header"><span class="finding-text">Radiation to left arm/shoulder</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                <div class="finding-item" id="pain-exertion" data-lr-pos="2.4" data-state="neutral"><div class="finding-header"><span class="finding-text">Pain worse with exertion</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                <div class="finding-item" id="pain-ischemia" data-lr-pos="2.1" data-state="neutral"><div class="finding-header"><span class="finding-text">Pain similar to prior ischemia</span></div><div class="finding-controls"><button type="b 
+utton" class="btn-present">Present</button></div></div>
+                <div class="finding-item" id="pain-positional" data-lr-pos="0.4" data-state="neutral"><div class="finding-header"><span class="finding-text">Positional pain (Reassuring)</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                <div class="finding-item" id="pain-pleuritic" data-lr-pos="0.3" data-state="neutral"><div class="finding-header"><span class="finding-text">Pleuritic pain (Reassuring)</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                <div class="finding-item" id="pain-sharp" data-lr-pos="0.3" data-state="neutral"><div class="finding-header"><span class="finding-text">Sharp or stabbing pain (Reassuring)</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                <div class="finding-item" id="pain-palpation" data-lr-pos="0.2" data-state="neutral"><div class="finding-header"><span class="finding-text">Pain reproduced on palpation</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
             </div>
 
-            <!-- Pain Characteristics -->
-            <div id="pain" class="tab-content">
-                <div class="finding-grid">
-                    <div class="finding-item" data-lr-pos="2.6" data-lr-neg="0.93" data-state="neutral"><div class="finding-header"><span class="finding-text">Radiation to both arms</span></div><div class="finding-controls"><button type="button" class="btn-absent">Absent</button><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" data-lr-pos="2.2" data-lr-neg="0.67" data-state="neutral"><div class="finding-header"><span class="finding-text">Pain similar to prior ischemia</span></div><div class="finding-controls"><button type="button" class="btn-absent">Absent</button><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" data-lr-pos="1.65" data-lr-neg="0.75" data-state="neutral"><div class="finding-header"><span class="finding-text">Pain worse with exertion</span></div><div class="finding-controls"><button type="button" class="btn-absent">Absent</button><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" data-lr-pos="1.35" data-lr-neg="0.92" data-state="neutral"><div class="finding-header"><span class="finding-text">Pain with diaphoresis</span></div><div class="finding-controls"><button type="button" class="btn-absent">Absent</button><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" data-lr-pos="0.48" data-lr-neg="1.15" data-state="neutral"><div class="finding-header"><span class="finding-text">Pleuritic pain (Reassuring)</span></div><div class="finding-controls"><button type="button" class="btn-absent">Absent</button><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" data-lr-pos="0.28" data-lr-neg="1.2" data-state="neutral"><div class="finding-header"><span class="finding-text">Pain reproduced on palpation</span></div><div class="finding-controls"><button type="button" class="btn-absent">Absent</button><button type="button" class="btn-present">Present</button></div></div>
-                </div>
-            </div>
-
-            <!-- Physical Findings -->
-            <div id="exam" class="tab-content">
-                <div class="finding-grid">
-                    <div class="finding-item" data-lr-pos="3.9" data-lr-neg="0.98" data-state="neutral"><div class="finding-header"><span class="finding-text">Hypotension (SBP < 100)</span></div><div class="finding-controls"><button type="button" class="btn-absent">Absent</button><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" data-lr-pos="2.0" data-lr-neg="0.95" data-state="neutral"><div class="finding-header"><span class="finding-text">Lung rales</span></div><div class="finding-controls"><button type="button" class="btn-absent">Absent</button><button type="button" class="btn-present">Present</button></div></div>
-                </div>
-            </div>
-            
-            <!-- ECG Findings -->
-            <div id="ecg" class="tab-content">
-                <div class="finding-grid">
-                    <div class="finding-item" data-lr-pos="5.3" data-lr-neg="0.79" data-state="neutral"><div class="finding-header"><span class="finding-text">ST Depression</span></div><div class="finding-controls"><button type="button" class="btn-absent">Absent</button><button type="button" class="btn-present">Present</button></div></div>
-                    <div class="finding-item" data-lr-pos="1.8" data-lr-neg="0.89" data-state="neutral"><div class="finding-header"><span class="finding-text">New T wave inversion</span></div><div class="finding-controls"><button type="button" class="btn-absent">Absent</button><button type="button" class="btn-present">Present</button></div></div>
-                </div>
+            <h3 class="findings-section-header">Physical Findings</h3>
+            <div class="finding-grid">
+                <div class="finding-item" id="exam-hypotension" data-lr-pos="2.3" data-state="neutral"><div class="finding-header"><span class="finding-text">Hypotension (SBP < 100)</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
+                <div class="finding-item" id="exam-diaphoresis" data-lr-pos="2.0" data-state="neutral"><div class="finding-header"><span class="finding-text">Diaphoresis (Sweating)</span></div><div class="finding-controls"><button type="button" class="btn-present">Present</button></div></div>
             </div>
         </div>
     </div>
-    <div class="attribution-footer">
-        <p>Developed by: Erfan Alinejad Ghadi, MD & Fatemeh Babapour, BSc.</p>
-        <a href="#" id="references-link">View Data Sources & References</a>
+    
+    <div class="output-panel">
+        <div id="live-report-card" class="live-report-card"></div>
+        <div id="active-findings-summary"></div>
+        <button type="button" class="btn-reset" onclick="resetForm()"><i class="fa-solid fa-arrow-rotate-left"></i> <span>Reset All & Start Over</span></button>
     </div>
+ </div>
+
+ <div class="attribution-footer">
+ <p>Developed by: Erfan Alinejad Ghadi, MD & Fatemeh Babapour, BSc.</p>
+ <a href="#" id="references-link">View Data Sources & References</a>
+ </div>
 </div>
 
 <!-- References Modal -->
 <div class="modal-overlay" id="references-modal">
-    <div class="modal-content">
-        <h2><i class="fas fa-book"></i> Data Sources & References</h2>
-        
-        <h3>Adjusted, Multipliable Risk Factors</h3>
-        <p>The risk factors in the "History & Risks" tab are derived from the landmark <strong>INTERHEART study</strong>. This was a global case-control study that used multivariate logistic regression to isolate the independent impact of each risk factor. The published Adjusted Odds Ratios (AORs) were converted to Adjusted Likelihood Ratios (LRs) using a precise mathematical formula.</p>
-        <p><strong>Key Principle:</strong> Because these LRs are statistically independent, they can be <strong>multiplied together</strong> to calculate a cumulative risk, providing a more accurate assessment than using single, unadjusted factors.</p>
-        <table>
-            <thead><tr><th>Risk Factor</th><th>Definition from Study</th><th>Adjusted LR+</th></tr></thead>
-            <tbody>
-                <tr><td><strong>Abnormal Lipids</strong></td><td>Highest quintile of the ApoB/ApoA1 ratio, a key marker of atherogenic dyslipidemia.</td><td>2.24</td></tr>
-                <tr><td><strong>Current Smoking</strong></td><td>Smoked any tobacco in the previous 12 months.</td><td>1.91</td></tr>
-                <tr><td><strong>Diabetes Mellitus</strong></td><td>Self-reported history of diabetes.</td><td>2.15</td></tr>
-                <tr><td><strong>Hypertension</strong></td><td>Self-reported history of hypertension.</td><td>1.59</td></tr>
-                <tr><td><strong>Abdominal Obesity</strong></td><td>Highest tertile of waist/hip ratio.</td><td>1.34</td></tr>
-                <tr><td><strong>Daily Fruits/Vegetables</strong></td><td>Daily consumption (protective factor).</td><td>0.80</td></tr>
-                <tr><td><strong>Regular Physical Activity</strong></td><td>≥4 hours/week of moderate or strenuous exercise (protective).</td><td>0.88</td></tr>
-                <tr><td><strong>Regular Alcohol Intake</strong></td><td>Consumption ≥3 times per week (protective).</td><td>0.93</td></tr>
-            </tbody>
-        </table>
-        <p style="margin-top: 1rem;"><strong>Primary Source:</strong> Yusuf, S., Hawken, S., Ôunpuu, S., et al. (2004). Effect of potentially modifiable risk factors associated with myocardial infarction in 52 countries (the INTERHEART study): case-control study. <em>The Lancet</em>, 364(9438), 937–952.</p>
+ <div class="modal-content">
+ <h2><i class="fas fa-book"></i> Data Sources & References</h2>
+ 
+ <h3>History & Risks (Adjusted)</h3>
+ <p>The risk factors in the "History & Risks" tab are derived from the landmark <strong>INTERHEART study</strong>. This global case-control study used multivariate logistic regression to isolate the independent impact of each risk factor. The published Adjusted Odds Ratios (AORs) were converted to Adjusted Likelihood Ratios (LRs).</p>
+ <p><strong>Key Principle:</strong> Because these LRs are statistically independent, they can be <strong>multiplied together</strong> to calculate a cumulative risk.</p>
+ <table>
+ <thead><tr><th>Risk Factor</th><th>Definition from Study</th><th>Adjusted LR+</th></tr></thead>
+ <tbody>
+ <tr><td><strong>Abnormal Lipids</strong></td><td>Highest quintile of the ApoB/ApoA1 ratio</td><td>2.24</td></tr>
+ <tr><td><strong>Current Smoking</strong></td><td>Smoked any tobacco in the previous 12 months</td><td>1.91</td></tr>
+ < 
+tr><td><strong>Diabetes Mellitus</strong></td><td>Self-reported history of diabetes</td><td>2.15</td></tr>
+ <tr><td><strong>Hypertension</strong></td><td>Self-reported history of hypertension</td><td>1.59</td></tr>
+ <tr><td><strong>Abdominal Obesity</strong></td><td>Highest tertile of waist/hip ratio</td><td>1.34</td></tr>
+ <tr><td><strong>Daily Fruits/Vegetables</strong></td><td>Daily consumption (protective)</td><td>0.80</td></tr>
+ <tr><td><strong>Regular Physical Activity</strong></td><td>≥4 hours/week of exercise (protective)</td><td>0.88</td></tr>
+ <tr><td><strong>Regular Alcohol Intake</strong></td><td>≥3 times per week (protective)</td><td>0.93</td></tr>
+ </tbody>
+ </table>
+ <p style="margin-top: 1rem;"><strong>Primary Source:</strong> Yusuf, S., et al. (2004). Effect of potentially modifiable risk factors associated with myocardial infarction in 52 countries (the INTERHEART study). <em>The Lancet</em>, 364(9438), 937–952.</p>
 
-        <h3>Other Clinical Findings & Prevalence</h3>
-        <p>LRs for pain characteristics, physical findings, and ECG findings are primarily sourced from systematic reviews and meta-analyses, including the JAMA "Rational Clinical Examination" series and syntheses from TheNNT.com. Prevalence estimates are derived from a synthesis of epidemiological studies reflecting spectrum bias.</p>
-        
-        <button class="btn-modal-close" id="modal-close-btn">Close</button>
-    </div>
+ <h3>Pain & Physical Findings (Adjusted)</h3>
+ <p>To ensure statistical consistency, all findings in the "Pain Characteristics" and "Physical Findings" sections are sourced from a single, high-quality prospective validation study by <strong>Gencer et al.</strong> The study used multivariable logistic regression to identify independent predictors of ACS. This guarantees that all clinical findings are mutually adjusted and can be multiplied together without double-counting risk.</p>
+ <table>
+    <thead><tr><th>Finding</th><th>Adjusted LR+</th></tr></thead>
+    <tbody>
+        <tr><td><strong>Radiation to both arms/shoulders</strong></td><td>4.7</td></tr>
+        <tr><td><strong>Radiation to right arm/shoulder</strong></td><td>2.9</td></tr>
+        <tr><td><strong>Pain worse with exertion</strong></td><td>2.4</td></tr>
+        <tr><td><strong>Hypotension (SBP < 100 mmHg)</strong></td><td>2.3</td></tr>
+        <tr><td><strong>Radiation to left arm/shoulder</strong></td><td>2.3</td></tr>
+        <tr><td><strong>Pain similar to prior ischemia</strong></td><td>2.1</td></tr>
+        <tr><td><strong>Diaphoresis (Sweating)</strong></td><td>2.0</td></tr>
+        <tr><td><strong>Positional pain</strong> (Reassuring)</td><td>0.4</td></tr>
+        <tr><td><strong>Pleuritic pain</strong> (Reassuring)</td><td>0.3</td></tr>
+        <tr><td><strong>Sharp or stabbing pain</strong> (Reassuring)</td><td>0.3</td></tr>
+        <tr><td><strong>Pain reproduced on palpation</strong> (Reassuring)</td><td>0.2</td></tr>
+    </tbody>
+ </table>
+ <p style="margin-top: 1rem;"><strong>Primary Source:</strong> Gencer, B., et al. (2010). Prospective Validation of a Clinical Score for 14-Day Risk of Serious Outcomes in Patients With Chest Pain. <em>Archives of Internal Medicine</em>, 170(10), 879–886.</p>
+ <p style="margin-top: 1rem;"><strong>Note:</strong> Other traditional findings like lung rales were not found to be significant <em>independent</em> predictors in this adjusted model, hence their exclusion to maintain the model's integrity.</p>
+ <button class="btn-modal-close" id="modal-close-btn">Close</button>
+ </div>
 </div>
 
 <script>
-    const inputPanel = document.getElementById('input-panel');
-    const liveReportCard = document.getElementById('live-report-card');
-    const activeFindingsContainer = document.getElementById('active-findings-summary');
-    const themeToggle = document.getElementById('theme-toggle');
-    const pretestCard = document.getElementById('pretest-card');
-    const currentPretestDisplay = document.getElementById('current-pretest-display');
-    const referencesModal = document.getElementById('references-modal');
-    const referencesLink = document.getElementById('references-link');
-    const closeModalBtn = document.getElementById('modal-close-btn');
+ const inputPanel = document.getElementById('input-panel');
+ const liveReportCard = document.getElementById('live-report-card');
+ const activeFindingsContainer = document.getElementById('active-findings-summary');
+ const themeToggle = document.getElementById('theme-toggle');
+ const pretestCard = document.getElementById('pretest-card');
+ const currentPretestDisplay = document.getElementById('current-pretest-display');
+ const referencesModal = document.getElementById('re 
+ferences-modal');
+ const referencesLink = document.getElementById('references-link');
+ const closeModalBtn = document.getElementById('modal-close-btn');
 
-    let preTestProbability = null;
+ let preTestProbability = null;
 
-    const probabilityToOdds = p => p / (1 - p);
-    const oddsToProbability = o => o / (1 + o);
+ const probabilityToOdds = p => p / (1 - p);
+ const oddsToProbability = o => o / (1 + o);
 
-    function calculatePostTestProbability() {
-        if (preTestProbability === null) return null;
+ function calculatePostTestProbability() {
+ if (preTestProbability === null) return null;
 
-        let compositeLR = 1.0;
-        const activeFindings = document.querySelectorAll('.finding-item.present, .finding-item.absent');
+ let compositeLR = 1.0;
+ const activeFindings = document.querySelectorAll('.finding-item.present');
 
-        activeFindings.forEach(finding => {
-            const state = finding.dataset.state;
-            let lrValue = 1.0;
-            if (state === 'present') {
-                lrValue = parseFloat(finding.dataset.lrPos);
-            } else if (state === 'absent') {
-                lrValue = parseFloat(finding.dataset.lrNeg);
-            }
-            compositeLR *= lrValue;
+ activeFindings.forEach(finding => {
+     compositeLR *= parseFloat(finding.dataset.lrPos);
+ });
+ 
+ const preTestOdds = probabilityToOdds(preTestProbability);
+ const postTestOdds = preTestOdds * compositeLR;
+ return oddsToProbability(postTestOdds);
+ }
+
+ function updateLiveReport() {
+ const finalProb = calculatePostTestProbability();
+ 
+ if (preTestProbability === null) {
+ liveReportCard.innerHTML = 
+ <div class="initial-prompt">
+ <i class="fas fa-arrow-up fa-2x" style="margin-bottom: 1rem;"></i>
+ <h4>Report will appear here</h4>
+ <p>Please set a Pre-Test Probability on Tab 1 to begin.</p>
+ </div>;
+ updateActiveFindings();
+ return;
+ }
+
+ const probPercent = (finalProb || 0) * 100;
+ let riskCategory, riskClass, recommendationText;
+
+ if (probPercent < 5) {
+ riskCategory = 'Low Risk'; riskClass = 'low';
+ recommendationText = 'ACS is very unlikely. Consider alternative diagnoses and manage according to low-risk chest pain protocols.';
+ } else if (probPercent >= 5 && probPercent < 20) {
+ riskCategory = 'Intermediate Risk'; riskClass = 'medium';
+ recommendationText = 'Further evaluation is required. Serial troponins and ECG monitoring are recommended. Clinical judgment is key.';
+ } else {
+ riskCategory = 'High Risk'; riskClass = 'high';
+ recommendationText = 'ACS is likely. Urgent cardiology consultation and aggressive medical management are strongly recommended.';
+ }
+ liveReportCard.innerHTML = 
+ <div class="label">Post-Test Probability</div>
+ <div class="value ${riskClass}">${probPercent.toFixed(1)}%</div>
+ <div class="interpretation">${riskCategory}</div>
+ <div class="recommendation ${riskClass}">
+ <h4><i class="fas fa-info-circle"></i> Clinical Recommendation</h4>
+ <p>${recommendationText}</p>
+ </div>
+ ;
+ updateActiveFindings();
+ }
+
+ function updateActiveFindings() {
+ const activeFindings = document.querySelectorAll('.finding-item.present');
+ 
+ if (activeFindings.length === 0) {
+ activeFindingsContainer.innerHTML = '<h4>Active Findings</h4><p style="color: var(--subtle-text);">No findings selected. Summary will appear here.</p>';
+ return;
+ }
+
+ let listItems = '';
+ activeFindings.forEach(finding => {
+ const text = finding.querySelector('.finding-text').textContent;
+ const iconClass = 'fa-check-circle';
+ listItems += <li class="present-finding"><i class="fas ${iconClass}"></i> ${text}</li>;
+ });
+ 
+ activeFindingsContainer.innerHTML = <h4>Active Findings</h4><ul>${listItems}</ul>;
+ }
+
+ function setPretestProbability(prob) {
+ preTestProbability = prob;
+ currentPretestDisplay.textContent = prob === null ? '--%' : ${(prob * 100).toFixed(0)}%;
+ updateLiveReport();
+ }
+
+ function switchToTab(tabId) {
+    document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    
+    document.querySelector(.tab-button[data-tab="${tabId}"]).classList.add('active');
+    document.getElementById(tabId).classList.add('active');
+ }
+
+ pretestCard.addEventListener('click', (event) => {
+ const target = event.target;
+ if (target.classList.contains('preset-btn')) {
+ document.querySelectorAll('.preset-btn').forEach(btn = 
+> btn.classList.remove('active'));
+ target.classList.add('active');
+ setPretestProbability(parseFloat(target.dataset.value));
+ setTimeout(() => switchToTab('history-tab'), 200); // Switch to next tab
+ }
+ });
+
+ function setFindingState(elementId, state) {
+    const item = document.getElementById(elementId);
+    if (!item || item.dataset.state === state) return;
+
+    item.dataset.state = state;
+    item.classList.remove('present');
+    if (state === 'present') {
+        item.classList.add(state);
+    }
+ }
+
+ function handleFindingClick(event) {
+    const button = event.target.closest('.btn-present');
+    if (!button) return;
+
+    const clickedItem = button.closest('.finding-item');
+    const currentState = clickedItem.dataset.state;
+    const isRadiationItem = clickedItem.id.startsWith('pain-rad-');
+
+    const newState = (currentState === 'present') ? 'neutral' : 'present';
+
+    if (isRadiationItem) {
+        const radiationIds = ['pain-rad-both', 'pain-rad-left', 'pain-rad-right'];
+        radiationIds.forEach(id => {
+            setFindingState(id, (id === clickedItem.id) ? newState : 'neutral');
         });
-        
-        const preTestOdds = probabilityToOdds(preTestProbability);
-        const postTestOdds = preTestOdds * compositeLR;
-        return oddsToProbability(postTestOdds);
-    }
-
-    function updateLiveReport() {
-        const finalProb = calculatePostTestProbability();
-        
-        if (preTestProbability === null) {
-            liveReportCard.innerHTML = `
-            <div class="initial-prompt">
-                <i class="fas fa-arrow-up fa-2x" style="margin-bottom: 1rem;"></i>
-                <h4>Set Pre-Test Probability</h4>
-                <p>Please select a clinical setting to begin.</p>
-            </div>`;
-            updateActiveFindings();
-            return;
-        }
-
-        const probPercent = (finalProb || 0) * 100;
-        let riskCategory, riskClass, recommendationText;
-
-        if (probPercent < 5) {
-            riskCategory = 'Low Risk'; riskClass = 'low';
-            recommendationText = 'ACS is very unlikely. Consider alternative diagnoses and manage according to low-risk chest pain protocols.';
-        } else if (probPercent >= 5 && probPercent < 20) {
-            riskCategory = 'Intermediate Risk'; riskClass = 'medium';
-            recommendationText = 'Further evaluation is required. Serial troponins and ECG monitoring are recommended. Clinical judgment is key.';
-        } else {
-            riskCategory = 'High Risk'; riskClass = 'high';
-            recommendationText = 'ACS is likely. Urgent cardiology consultation and aggressive medical management are strongly recommended.';
-        }
-
-        liveReportCard.innerHTML = `
-            <div class="label">Post-Test Probability</div>
-            <div class="value ${riskClass}">${probPercent.toFixed(1)}%</div>
-            <div class="interpretation">${riskCategory}</div>
-            <div class="recommendation ${riskClass}">
-                <h4><i class="fas fa-info-circle"></i> Clinical Recommendation</h4>
-                <p>${recommendationText}</p>
-            </div>
-        `;
-        updateActiveFindings();
-    }
-
-    function updateActiveFindings() {
-        const activeFindings = document.querySelectorAll('.finding-item.present, .finding-item.absent');
-        
-        if (activeFindings.length === 0) {
-            activeFindingsContainer.innerHTML = `<h4>Active Findings</h4><p style="color: var(--subtle-text);">Select findings to see a summary here.</p>`;
-            return;
-        }
-
-        let listItems = '';
-        activeFindings.forEach(finding => {
-            const text = finding.querySelector('.finding-text').textContent;
-            const isPresent = finding.classList.contains('present');
-            const findingClass = isPresent ? 'present-finding' : 'absent-finding';
-            const iconClass = isPresent ? 'fa-check-circle' : 'fa-times-circle';
-            listItems += `<li class="${findingClass}"><i class="fas ${iconClass}"></i> ${text}</li>`;
-        });
-        
-        activeFindingsContainer.innerHTML = `<h4>Active Findings</h4><ul>${listItems}</ul>`;
-    }
-
-    function setPretestProbability(prob) {
-        preTestProbability = prob;
-        currentPretestDisplay.textContent = prob === null ? '--%' : `${(prob * 100).toFixed(0)}%`;
-        updateLiveReport();
-    }
-
-    pretestCard.addEventListener('click', (event) => {
-        const target = event.target;
-        if (target.classList.contains('preset-btn')) {
-            document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
-            target.classList.add('active');
-            setPretestProbability(parseFloat(target.dataset.value));
-        }
-    });
-
-    function handleFindingClick(event) {
-        const button = event.target.closest('.btn-present, .btn-absent');
-        if (!button) return;
-
-        const clickedItem = button.closest('.finding-item');
-        const currentState = clickedItem.dataset.state;
-        const buttonType = button.classList.contains('btn-present') ? 'present' : 'absent';
-
-        if (currentState === buttonType) {
-            clickedItem.dataset.state = 'neutral';
-            clickedItem.classList.remove('present', 'absent');
-        } else {
-            clickedItem.dataset.state = buttonType;
-            clickedItem.classList.remove('present', 'absent');
-            clickedItem.classList.add(buttonType);
-        }
-        
-        updateLiveReport();
+    } else {
+        setFindingState(clickedItem.id, newState);
     }
     
-    function handleTabClick(event) {
-        const clickedTab = event.target.closest('.tab-button');
-        if (!clickedTab) return;
-        document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        clickedTab.classList.add('active');
-        document.getElementById(clickedTab.dataset.tab).classList.add('active');
-    }
+    updateLiveReport();
+ }
+ 
+ document.querySelector('.tab-nav').addEventListener('click', (event) => {
+    const clickedTab = event.target.closest('.tab-button');
+    if (!clickedTab) return;
+    switchToTab(clickedTab.dataset.tab);
+ });
 
-    function resetForm() {
-        document.querySelectorAll('.finding-item').forEach(item => {
-            item.dataset.state = 'neutral';
-            item.classList.remove('present', 'absent');
-        });
-        
-        document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
-        setPretestProbability(null);
+ function resetForm() {
+ document.querySelectorAll('.finding-item').forEach(item => {
+    setFindingState(item.id, 'neutral');
+ });
+ 
+ document.querySelectorAll('.preset-btn').forEach(btn => btn.classList.remove('active'));
+ setPretestProbability(null);
+ 
+ switchToTab('pretest-tab');
+ window.scrollTo({ top: 0, behavior: 'smooth' });
+ }
+ 
+ function setButtonLRs() {
+ document.querySelectorAll('.finding-item').forEach(item => {
+ const lrPos = item.dataset.lrPos;
+ const btnPresent = item.querySelector('.btn-present');
+ 
+ if (btnPresent && !btnPresent.textContent.includes('(')) {
+     btnPresent.innerHTML = Present (${lrPos});
+ }
+ });
+ }
 
-        document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.querySelector('.tab-button[data-tab="history"]').classList.add('active');
-        document.getElementById('history').classList.add('active');
+ themeToggle.addEventListener('change', () => {
+ document.body.classList.toggle('dark-mode');
+ localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+ });
+ 
+ referencesLink.addEventListener('click', (e) => {
+ e.preventDefault();
+ referencesModal.classList.add('active');
+ });
 
-        updateLiveReport();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-    
-    function setButtonLRs() {
-        document.querySelectorAll('.finding-item').forEach(item => {
-            const lrPos = item.dataset.lrPos;
-            const lrNeg = item.dataset.lrNeg;
-            const btnPresent = item.querySelector('.btn-present');
-            const btnAbsent = item.querySelector('.btn-absent');
-            
-            if (btnPresent && !btnPresent.textContent.includes('(')) {
-                btnPresent.innerHTML += ` (${lrPos})`;
-            }
-            if (btnAbsent && !btnAbsent.textContent.includes('(')) {
-                btnAbsent.innerHTML += ` (${lrNeg})`;
-            }
-        });
-    }
+ closeModalBtn.addEventListener('click', () => {
+ referencesModal.classList.remove('active');
+ });
 
-    themeToggle.addEventListener('change', () => {
-        document.body.classList.toggle('dark-mode');
-        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-    });
-    
-    referencesLink.addEventListener('click', (e) => {
-        e.preventDefault();
-        referencesModal.classList.add('active');
-    });
+ referencesModal.addEventListener('click', (e) => {
+ if (e.target === referencesModal) {
+ referencesModal.classList.remove('active');
+ }
+ });
 
-    closeModalBtn.addEventListener('click', () => {
-        referencesModal.classList.remove('active');
-    });
+ function applyInitialTheme() {
+ const savedTheme = localStorage.getItem('theme');
+ if (savedTheme === 'dark') {
+ document.body.classList.add('dark-mode');
+ themeToggle.checked = true;
+ }
+ }
 
-    referencesModal.addEventListener('click', (e) => {
-        if (e.target === referencesModal) {
-            referencesModal.classList.remove('active');
-        }
-    });
-
-    function applyInitialTheme() {
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') {
-            document.body.classList.add('dark-mode');
-            themeToggle.checked = true;
-        }
-    }
-
-    applyInitialTheme();
-    inputPanel.addEventListener('click', handleFindingClick);
-    document.querySelector('.tab-nav').addEventListener('click', handleTabClick);
-    window.addEventListener('load', () => {
-        setButtonLRs();
-        updateLiveReport();
-    });
+ applyInitialTheme();
+ inputPanel.addEventListener('click', handleFindingClick);
+ window.addEventListener('load', () => {
+ setButtonLRs();
+ updateLiveReport();
+ });
 </script>
 
 </body>
